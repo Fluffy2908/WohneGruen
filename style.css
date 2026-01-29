@@ -255,6 +255,23 @@ main > .contact-complete-page:first-child {
     padding-block-start: 0;
 }
 
+/* SPECIFIC FIX: Force Galerie and Modelle pages to have zero gap */
+.gallery-complete-page,
+.models-complete-page {
+    margin-top: 0;
+    margin-block-start: 0;
+    padding-top: 0;
+    padding-block-start: 0;
+}
+
+.gallery-complete-page .gallery-hero,
+.models-complete-page .models-hero {
+    margin-top: 0;
+    margin-block-start: 0;
+    padding-top: 0;
+    padding-block-start: 0;
+}
+
 /* WordPress Admin Bar Support */
 .admin-bar .site-navigation {
     top: 32px;
