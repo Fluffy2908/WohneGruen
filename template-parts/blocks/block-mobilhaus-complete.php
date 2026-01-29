@@ -904,9 +904,10 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 }
 
 .palette-preview {
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: none;
+    background: transparent;
 }
 
 .palette-preview img {
