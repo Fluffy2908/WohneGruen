@@ -876,9 +876,9 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
 .scheme-block {
     margin-bottom: 80px;
-    padding: 60px;
-    background: var(--color-background);
-    border-radius: 24px;
+    padding: 60px 0;
+    background: transparent;
+    border-radius: 0;
 }
 
 /* Scheme Header Grid: Text LEFT, Color Palette RIGHT */
@@ -905,7 +905,7 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
 .palette-preview {
     border-radius: 0;
-    overflow: visible;
+    overflow: hidden;
     box-shadow: none;
     background: transparent;
 }
