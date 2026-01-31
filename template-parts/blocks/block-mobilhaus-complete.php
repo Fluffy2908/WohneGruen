@@ -1070,26 +1070,32 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
         font-size: 2rem;
     }
 
-    /* Interior schemes section - grayish background on mobile */
-    .interior-schemes-section .section-title,
-    .interior-schemes-section .section-subtitle {
+    /* Interior schemes section - unified grayish background on mobile */
+    .interior-schemes-section .section-title {
         background: #f8f9fa;
-        padding: 20px;
-        border-radius: 12px;
+        padding: 20px 20px 12px 20px;
+        border-radius: 12px 12px 0 0;
         margin-left: -20px;
         margin-right: -20px;
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-
-    .interior-schemes-section .section-title {
-        margin-bottom: 16px;
-        padding-bottom: 12px;
+        padding-left: 40px;
+        padding-right: 40px;
+        margin-bottom: 0;
     }
 
     .interior-schemes-section .section-subtitle {
+        background: #f8f9fa;
+        padding: 8px 20px 20px 20px;
+        border-radius: 0 0 12px 12px;
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 40px;
+        padding-right: 40px;
         margin-bottom: 40px;
-        padding-top: 0;
+    }
+
+    /* Reduce scheme color names (h3) font size to half */
+    .scheme-text h3 {
+        font-size: 1.25rem;
     }
 
     .interior-gallery {
@@ -1147,6 +1153,11 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 @media (max-width: 479px) {
     .hero-headline {
         font-size: 1.75rem;
+    }
+
+    /* Further reduce scheme color names on very small screens */
+    .scheme-text h3 {
+        font-size: 1.1rem;
     }
 
     .interior-gallery {
