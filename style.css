@@ -609,6 +609,7 @@ ul {
     right: 0;
     top: 50%;
     transform: translateY(-50%);
+    transform-origin: center;
     font-size: 0.6rem;
     opacity: 0.6;
     transition: transform 0.3s ease;
@@ -617,6 +618,7 @@ ul {
 
 .nav-menu > li.menu-item-has-children:hover > a::after {
     transform: translateY(-50%) rotate(180deg);
+    opacity: 1;
 }
 
 /* Desktop submenu (only applies to desktop nav) */
@@ -886,9 +888,8 @@ ul {
 .mobile-menu-items .menu-item-has-children > .menu-item-wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 300px;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .mobile-menu-items .submenu-toggle {
