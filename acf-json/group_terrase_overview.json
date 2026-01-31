@@ -1,0 +1,89 @@
+{
+    "key": "group_terrase_overview",
+    "title": "Terrassen Übersicht Block",
+    "fields": [
+        {
+            "key": "field_terrase_hero_title",
+            "label": "Hero Titel",
+            "name": "terrase_hero_title",
+            "type": "text",
+            "required": 1
+        },
+        {
+            "key": "field_terrase_hero_subtitle",
+            "label": "Hero Untertitel",
+            "name": "terrase_hero_subtitle",
+            "type": "text"
+        },
+        {
+            "key": "field_terrase_hero_image",
+            "label": "Hero Hintergrundbild",
+            "name": "terrase_hero_image",
+            "type": "image",
+            "return_format": "array",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_terrase_intro_title",
+            "label": "Einleitungs Titel",
+            "name": "terrase_intro_title",
+            "type": "text"
+        },
+        {
+            "key": "field_terrase_intro_content",
+            "label": "Einleitungs Text",
+            "name": "terrase_intro_content",
+            "type": "wysiwyg",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 0
+        },
+        {
+            "key": "field_terrase_nature_model",
+            "label": "Nature Terrasse",
+            "name": "terrase_nature_model",
+            "type": "post_object",
+            "instructions": "Wählen Sie die Terrasse für \"Nature\"",
+            "required": 0,
+            "post_type": ["terrase"],
+            "post_status": ["publish", "draft", "pending"],
+            "taxonomy": [],
+            "allow_null": 1,
+            "multiple": 0,
+            "return_format": "object",
+            "ui": 1
+        },
+        {
+            "key": "field_terrase_pure_model",
+            "label": "Pure Terrasse",
+            "name": "terrase_pure_model",
+            "type": "post_object",
+            "instructions": "Wählen Sie die Terrasse für \"Pure\"",
+            "required": 0,
+            "post_type": ["terrase"],
+            "post_status": ["publish", "draft", "pending"],
+            "taxonomy": [],
+            "allow_null": 1,
+            "multiple": 0,
+            "return_format": "object",
+            "ui": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/wohnegruen-terrase-overview"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Alles-in-einem Block für Terrassen Übersicht mit Nature/Pure Auswahl - KEINE HARDCODED INHALTE"
+}

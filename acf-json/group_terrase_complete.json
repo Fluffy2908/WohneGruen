@@ -1,0 +1,214 @@
+{
+    "key": "group_terrase_complete",
+    "title": "Terrasse Komplett Block",
+    "fields": [
+        {
+            "key": "field_terrase_hero_title",
+            "label": "Hero Titel",
+            "name": "terrase_hero_title",
+            "type": "text",
+            "instructions": "Haupttitel (leer lassen für Post-Titel)",
+            "required": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_terrase_hero_subtitle",
+            "label": "Hero Untertitel",
+            "name": "terrase_hero_subtitle",
+            "type": "textarea",
+            "instructions": "Kurze Beschreibung unter dem Titel",
+            "required": 0,
+            "rows": 3
+        },
+        {
+            "key": "field_terrase_hero_image",
+            "label": "Hero Hintergrundbild",
+            "name": "terrase_hero_image",
+            "type": "image",
+            "instructions": "Hintergrundbild für Hero-Bereich",
+            "return_format": "array",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_terrase_description_title",
+            "label": "Beschreibung Titel",
+            "name": "terrase_description_title",
+            "type": "text",
+            "instructions": "Titel für den Beschreibungsbereich",
+            "default_value": ""
+        },
+        {
+            "key": "field_terrase_description_text",
+            "label": "Beschreibung Text",
+            "name": "terrase_description_text",
+            "type": "wysiwyg",
+            "instructions": "Detaillierte Beschreibung der Terrasse",
+            "required": 1,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1
+        },
+        {
+            "key": "field_terrase_size_variants",
+            "label": "Größenvarianten",
+            "name": "terrase_size_variants",
+            "type": "repeater",
+            "instructions": "Fügen Sie Größenvarianten hinzu. Jede Variante hat eigene Technische Daten.",
+            "required": 0,
+            "min": 1,
+            "max": 6,
+            "layout": "block",
+            "button_label": "Variante hinzufügen",
+            "sub_fields": [
+                {
+                    "key": "field_terrase_variant_name",
+                    "label": "Varianten Name",
+                    "name": "variant_name",
+                    "type": "text",
+                    "instructions": "z.B. '3 x 8m' oder '4 x 10m'",
+                    "required": 1,
+                    "placeholder": "3 x 8m"
+                },
+                {
+                    "key": "field_terrase_variant_image",
+                    "label": "Varianten Bild",
+                    "name": "variant_image",
+                    "type": "image",
+                    "instructions": "Vorschaubild für diese Variante",
+                    "return_format": "array",
+                    "preview_size": "medium"
+                },
+                {
+                    "key": "field_terrase_variant_specifications",
+                    "label": "Technische Daten",
+                    "name": "specifications",
+                    "type": "repeater",
+                    "instructions": "Technische Spezifikationen für diese Variante",
+                    "min": 0,
+                    "layout": "table",
+                    "button_label": "Daten hinzufügen",
+                    "sub_fields": [
+                        {
+                            "key": "field_terrase_variant_spec_label",
+                            "label": "Bezeichnung",
+                            "name": "label",
+                            "type": "text",
+                            "required": 1,
+                            "placeholder": "z.B. Länge"
+                        },
+                        {
+                            "key": "field_terrase_variant_spec_value",
+                            "label": "Wert",
+                            "name": "value",
+                            "type": "text",
+                            "required": 1,
+                            "placeholder": "z.B. 8 m"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "field_terrase_style_schemes",
+            "label": "Stil & Design Optionen",
+            "name": "terrase_style_schemes",
+            "type": "repeater",
+            "instructions": "Verschiedene Stil- und Design-Optionen für die Terrasse",
+            "min": 0,
+            "max": 6,
+            "layout": "block",
+            "button_label": "Stil hinzufügen",
+            "sub_fields": [
+                {
+                    "key": "field_terrase_scheme_name",
+                    "label": "Stil Name",
+                    "name": "scheme_name",
+                    "type": "text",
+                    "required": 1,
+                    "placeholder": "z.B. Modern, Klassisch, Mediterran"
+                },
+                {
+                    "key": "field_terrase_scheme_description",
+                    "label": "Beschreibung",
+                    "name": "scheme_description",
+                    "type": "textarea",
+                    "rows": 2,
+                    "placeholder": ""
+                },
+                {
+                    "key": "field_terrase_color_palette_image",
+                    "label": "Material-/Farbpalette Bild",
+                    "name": "color_palette_image",
+                    "type": "image",
+                    "instructions": "Bild mit Materialien und Farben",
+                    "return_format": "array",
+                    "preview_size": "thumbnail"
+                },
+                {
+                    "key": "field_terrase_style_gallery",
+                    "label": "Stil Galerie",
+                    "name": "gallery",
+                    "type": "gallery",
+                    "instructions": "4-8 Bilder dieser Stil-Option",
+                    "required": 1,
+                    "min": 4,
+                    "max": 8,
+                    "insert": "append",
+                    "preview_size": "thumbnail",
+                    "return_format": "array"
+                }
+            ]
+        },
+        {
+            "key": "field_terrase_features",
+            "label": "Besondere Merkmale",
+            "name": "terrase_features",
+            "type": "repeater",
+            "instructions": "Besondere Features und Vorteile dieser Terrasse",
+            "min": 0,
+            "max": 8,
+            "layout": "table",
+            "button_label": "Merkmal hinzufügen",
+            "sub_fields": [
+                {
+                    "key": "field_terrase_feature_icon",
+                    "label": "Icon (optional)",
+                    "name": "icon",
+                    "type": "text",
+                    "placeholder": "dashicons-yes, dashicons-star-filled, etc."
+                },
+                {
+                    "key": "field_terrase_feature_title",
+                    "label": "Titel",
+                    "name": "title",
+                    "type": "text",
+                    "required": 1
+                },
+                {
+                    "key": "field_terrase_feature_description",
+                    "label": "Beschreibung",
+                    "name": "description",
+                    "type": "textarea",
+                    "rows": 2
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf/wohnegruen-terrase-complete"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Block für Terrassen-Seiten (Nature, Pure, etc.) - KEINE HARDCODED INHALTE"
+}

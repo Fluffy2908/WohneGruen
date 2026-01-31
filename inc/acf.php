@@ -144,7 +144,48 @@ function wohnegruen_register_acf_blocks() {
         'enqueue_assets'    => function() {},
     ));
 
-    error_log('WohneGrün: Successfully registered 6 all-in-one ACF blocks with live preview');
+    // 7. TERRASE OVERVIEW BLOCK (Terrassen listing page)
+    acf_register_block_type(array(
+        'name'              => 'wohnegruen-terrase-overview',
+        'title'             => __('Terrassen Übersicht', 'wohnegruen'),
+        'description'       => __('Alles-in-einem Block für Terrassen Übersicht: Hero, Intro, Calling Cards - mit Live-Vorschau.', 'wohnegruen'),
+        'render_template'   => 'template-parts/blocks/block-terrase-overview.php',
+        'category'          => $category,
+        'icon'              => 'grid-view',
+        'keywords'          => array('terrase', 'terrassen', 'übersicht', 'overview', 'komplett', 'complete', 'live'),
+        'supports'          => array(
+            'align' => array('full', 'wide'),
+            'anchor' => true,
+            'jsx' => true,
+            'mode' => false,
+        ),
+        'mode'              => 'auto',
+        'post_types'        => array('page'),
+        'enqueue_assets'    => function() {},
+    ));
+
+    // 8. TERRASE COMPLETE BLOCK (For individual terrase posts)
+    acf_register_block_type(array(
+        'name'              => 'wohnegruen-terrase-complete',
+        'title'             => __('Terrasse Komplett', 'wohnegruen'),
+        'description'       => __('Alles-in-einem Block für Terrassen-Seiten: Hero, Beschreibung, Größenvarianten, Stiloptionen - mit Live-Vorschau.', 'wohnegruen'),
+        'render_template'   => 'template-parts/blocks/block-terrase-complete.php',
+        'category'          => $category,
+        'icon'              => 'admin-multisite',
+        'keywords'          => array('terrase', 'terrasse', 'komplett', 'complete', 'live'),
+        'supports'          => array(
+            'align' => array('full', 'wide'),
+            'anchor' => true,
+            'mode' => false,
+            'jsx' => true,
+        ),
+        'mode'              => 'auto',
+        'post_types'        => array('terrase'),
+        'enqueue_style'     => false,
+        'enqueue_assets'    => function() {},
+    ));
+
+    error_log('WohneGrün: Successfully registered 8 all-in-one ACF blocks with live preview');
 }
 add_action('acf/init', 'wohnegruen_register_acf_blocks', 5);
 add_action('init', 'wohnegruen_register_acf_blocks', 20);
