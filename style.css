@@ -188,8 +188,8 @@ main,
 .page-content,
 .front-page,
 .site-content {
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* Remove WordPress default block spacing */
@@ -206,10 +206,19 @@ main,
 /* Remove spacing from WordPress ACF block wrappers */
 .wp-block-acf,
 [class*="wp-block-acf"] {
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-    padding-bottom: 0;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Specific fix for Gallery and Models blocks */
+.wp-block[data-type="acf/wohnegruen-gallery-complete"],
+.wp-block[data-type="acf/wohnegruen-models-complete"] {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 /* Remove spacing from all page wrapper divs */
@@ -217,8 +226,8 @@ main,
 .models-complete-page,
 .home-complete-page,
 .contact-complete-page {
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* Ensure hero sections touch the nav exactly */
@@ -258,18 +267,18 @@ main > .contact-complete-page:first-child {
 /* SPECIFIC FIX: Force Galerie and Modelle pages to have zero gap */
 .gallery-complete-page,
 .models-complete-page {
-    margin-top: 0;
-    margin-block-start: 0;
-    padding-top: 0;
-    padding-block-start: 0;
+    margin-top: 0 !important;
+    margin-block-start: 0 !important;
+    padding-top: 0 !important;
+    padding-block-start: 0 !important;
 }
 
 .gallery-complete-page .gallery-hero,
 .models-complete-page .models-hero {
-    margin-top: 0;
-    margin-block-start: 0;
-    padding-top: 0;
-    padding-block-start: 0;
+    margin-top: 0 !important;
+    margin-block-start: 0 !important;
+    padding-top: 0 !important;
+    padding-block-start: 0 !important;
 }
 
 /* WordPress Admin Bar Support */
