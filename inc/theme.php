@@ -37,10 +37,24 @@ add_action('after_setup_theme', 'wohnegruen_setup');
 
 /**
  * Disable wpautop completely to prevent unwanted <p> tags around blocks
- * Run at priority 0 to execute very early
  */
 remove_filter('the_content', 'wpautop');
 remove_filter('the_excerpt', 'wpautop');
+
+/**
+ * Remove all block wrappers from Gutenberg blocks
+ */
+add_filter('render_block', function($block_content, $block) {
+    // Only process for pages
+    if (!is_page()) {
+        return $block_content;
+    }
+
+    // Remove any wrapping <p> tags around block divs
+    $block_content = preg_replace('/<p>\s*(<div[^>]*>.*<\/div>)\s*<\/p>/s', '$1', $block_content);
+
+    return $block_content;
+}, 10, 2);
 
 /**
  * Register Custom Block Category for ACF Blocks
