@@ -13,7 +13,9 @@ $intro_content = get_field('models_intro_content');
 $nature_model = get_field('models_nature_model');
 $pure_model = get_field('models_pure_model');
 $block_id = 'models-complete-' . $block['id'];
-?><div class="models-complete-page" id="<?php echo esc_attr($block_id); ?>">
+?>
+
+<div class="models-complete-page" id="<?php echo esc_attr($block_id); ?>">
 
     <!-- Hero Section -->
     <section class="models-hero" <?php if ($hero_image): ?>style="background-image: url('<?php echo esc_url($hero_image['url']); ?>');"<?php endif; ?>>
