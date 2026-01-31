@@ -703,13 +703,13 @@ if ($hero_image && isset($hero_image['url'])) {
 </style>
 
 <script>
-// Global data storage
-window.terraseData_<?php echo esc_js($block_id); ?> = <?php echo json_encode($color_variants ?: []); ?>;
-window.terraseType_<?php echo esc_js($block_id); ?> = '<?php echo esc_js($terrase_type); ?>';
-window.currentColorIndex_<?php echo esc_js($block_id); ?> = 0;
-window.currentSizeIndex_<?php echo esc_js($block_id); ?> = 0;
-window.currentOrientationIndex_<?php echo esc_js($block_id); ?> = 0;
-window.currentImageIndex_<?php echo esc_js($block_id); ?> = 0;
+// Global data storage - using bracket notation to handle hyphens in block IDs
+window['terraseData_<?php echo esc_js($block_id); ?>'] = <?php echo json_encode($color_variants ?: []); ?>;
+window['terraseType_<?php echo esc_js($block_id); ?>'] = '<?php echo esc_js($terrase_type); ?>';
+window['currentColorIndex_<?php echo esc_js($block_id); ?>'] = 0;
+window['currentSizeIndex_<?php echo esc_js($block_id); ?>'] = 0;
+window['currentOrientationIndex_<?php echo esc_js($block_id); ?>'] = 0;
+window['currentImageIndex_<?php echo esc_js($block_id); ?>'] = 0;
 
 // Switch Color - EXPLICITLY GLOBAL
 window.switchTerraseColor = function(colorIndex, blockId) {
