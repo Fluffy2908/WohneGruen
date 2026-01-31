@@ -141,7 +141,7 @@ if ($hero_image && isset($hero_image['url'])) {
                         <div class="terrase-gallery-grid">
                             <?php foreach ($orientation['gallery'] as $img_index => $image): ?>
                                 <div class="gallery-item"
-                                     onclick="openTerraseLight box(<?php echo $color_index; ?>, <?php echo $or_index; ?>, <?php echo $img_index; ?>, '<?php echo esc_js($block_id); ?>')">
+                                     onclick="openTerraseLightbox(<?php echo $color_index; ?>, <?php echo $or_index; ?>, <?php echo $img_index; ?>, '<?php echo esc_js($block_id); ?>')">
                                     <img src="<?php echo esc_url($image['sizes']['medium'] ?? $image['url']); ?>"
                                          alt="<?php echo esc_attr($color['color_name'] . ' - ' . $orientation['orientation_name'] . ' - Bild ' . ($img_index + 1)); ?>"
                                          loading="lazy">
@@ -768,7 +768,11 @@ function switchPureOrientation(colorIndex, sizeIndex, orientationIndex, blockId)
 // Open Lightbox (Nature)
 function openTerraseLightbox(colorIndex, orientationIndex, imageIndex, blockId) {
     const data = window['terraseData_' + blockId];
+    if (!data || !data[colorIndex]) return;
+
     const color = data[colorIndex];
+    if (!color.nature_orientations || !color.nature_orientations[orientationIndex]) return;
+
     const orientation = color.nature_orientations[orientationIndex];
     const image = orientation.gallery[imageIndex];
 
@@ -779,13 +783,20 @@ function openTerraseLightbox(colorIndex, orientationIndex, imageIndex, blockId) 
     document.getElementById('lightbox-img-' + blockId).src = image.url;
     document.getElementById('lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${orientation.gallery.length}`;
     document.getElementById('lightbox-' + blockId).classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 // Open Lightbox (Pure)
 function openPureLightbox(colorIndex, sizeIndex, orientationIndex, imageIndex, blockId) {
     const data = window['terraseData_' + blockId];
+    if (!data || !data[colorIndex]) return;
+
     const color = data[colorIndex];
+    if (!color.pure_sizes || !color.pure_sizes[sizeIndex]) return;
+
     const size = color.pure_sizes[sizeIndex];
+    if (!size.orientations || !size.orientations[orientationIndex]) return;
+
     const orientation = size.orientations[orientationIndex];
     const image = orientation.gallery[imageIndex];
 
@@ -797,11 +808,13 @@ function openPureLightbox(colorIndex, sizeIndex, orientationIndex, imageIndex, b
     document.getElementById('lightbox-img-' + blockId).src = image.url;
     document.getElementById('lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${orientation.gallery.length}`;
     document.getElementById('lightbox-' + blockId).classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 // Close Lightbox
 function closeTerraseLightbox(blockId) {
     document.getElementById('lightbox-' + blockId).classList.remove('active');
+    document.body.style.overflow = 'auto';
 }
 
 // Navigate Lightbox
