@@ -812,7 +812,7 @@ ul {
 .mobile-menu-items {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     gap: 1.5rem;
     margin-bottom: 2rem;
     width: 100%;
@@ -821,6 +821,7 @@ ul {
 .mobile-menu-items > li {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .mobile-menu-items a {
@@ -829,30 +830,18 @@ ul {
     font-weight: 600;
     color: var(--color-foreground);
     position: relative;
-    padding-left: 1rem;
+    padding-left: 0;
     transition: var(--transition);
     text-align: center;
 }
 
+/* Remove ::before indicator from mobile menu - doesn't work well when centered */
 .mobile-menu-items a::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 2px;
-    background-color: var(--color-primary);
-    transition: width 0.3s ease;
+    display: none;
 }
 
 .mobile-menu-items a:hover {
     color: var(--color-primary);
-    padding-left: 1.5rem;
-}
-
-.mobile-menu-items a:hover::before {
-    width: 0.75rem;
 }
 
 /* Mobile menu list items */
@@ -873,13 +862,7 @@ ul {
 .mobile-menu-items li.current_page_item > a,
 .mobile-menu-items li.current-menu-ancestor > a {
     color: var(--color-primary);
-    padding-left: 1.5rem;
-}
-
-.mobile-menu-items li.current-menu-item > a::before,
-.mobile-menu-items li.current_page_item > a::before,
-.mobile-menu-items li.current-menu-ancestor > a::before {
-    width: 0.75rem;
+    font-weight: 700;
 }
 
 /* Mobile Submenu Styles */
