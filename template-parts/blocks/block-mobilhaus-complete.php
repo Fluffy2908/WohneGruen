@@ -185,6 +185,23 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
                     <?php endif; ?>
                 </div>
 
+                <!-- PDF Download Button -->
+                <?php if (!empty($variant['pdf_download'])): ?>
+                <div class="variant-pdf-download">
+                    <a href="<?php echo esc_url($variant['pdf_download']['url']); ?>"
+                       class="pdf-download-btn"
+                       download
+                       target="_blank">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <p></p>
+                    </a>
+                </div>
+                <?php endif; ?>
+
                 <!-- Grundrisse for this variant -->
                 <?php if (!empty($variant['floor_plans']) && is_array($variant['floor_plans']) && count($variant['floor_plans']) > 0): ?>
                 <div class="variant-floor-plans">
@@ -1192,6 +1209,45 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     background: rgba(0, 0, 0, 0.5);
     padding: 8px 24px;
     border-radius: 50px;
+}
+
+/* PDF Download Button */
+.variant-pdf-download {
+    margin: 40px 0;
+    text-align: center;
+}
+
+.pdf-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 36px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.125rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(var(--color-primary-rgb), 0.3);
+}
+
+.pdf-download-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(var(--color-primary-rgb), 0.4);
+}
+
+.pdf-download-btn svg {
+    flex-shrink: 0;
+}
+
+.pdf-download-btn p {
+    margin: 0;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: 700;
 }
 
 /* Responsive Design */

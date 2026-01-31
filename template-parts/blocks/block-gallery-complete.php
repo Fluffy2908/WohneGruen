@@ -658,7 +658,7 @@ $block_id = 'gallery-' . $block['id'];
 
 @media (max-width: 767px) {
     .hero-content h1 {
-        font-size: 2.5rem;
+        font-size: 1.25rem;
     }
 
     .big-toggle-buttons {
