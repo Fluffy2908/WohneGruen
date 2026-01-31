@@ -677,6 +677,7 @@ ul {
     width: calc(100% - 3rem);
 }
 
+/* Active submenu item - always show underline when dropdown is open */
 .sub-menu a.current-menu-item,
 .sub-menu a.current_page_item {
     background: var(--color-background);
@@ -687,6 +688,7 @@ ul {
 .sub-menu a.current-menu-item::after,
 .sub-menu a.current_page_item::after {
     width: calc(100% - 2.5rem);
+    transition: none; /* Instant appearance for active state */
 }
 
 .nav-right {
