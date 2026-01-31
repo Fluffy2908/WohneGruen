@@ -11,6 +11,7 @@ $color_variants = get_field('mobilhaus_color_variants');
 $description_title = get_field('mobilhaus_description_title');
 $description_text = get_field('mobilhaus_description_text');
 $size_variants = get_field('mobilhaus_size_variants');
+$terrase_section = get_field('mobilhaus_terrase_section');
 $interior_schemes = get_field('mobilhaus_interior_schemes');
 
 $block_id = isset($block['anchor']) ? $block['anchor'] : 'mobilhaus-' . $block['id'];
@@ -225,6 +226,161 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     </section>
     <?php endif; ?>
 
+    <!-- TERRACE OPTIONS SECTION -->
+    <?php if ($terrase_section && isset($terrase_section['enable_terrase']) && $terrase_section['enable_terrase']):
+        $terrase_title = !empty($terrase_section['terrase_title']) ? $terrase_section['terrase_title'] : 'Terrassen Optionen';
+        $anthrazit_sizes = isset($terrase_section['terrase_anthrazit_sizes']) ? $terrase_section['terrase_anthrazit_sizes'] : array();
+        $weiss_sizes = isset($terrase_section['terrase_weiss_sizes']) ? $terrase_section['terrase_weiss_sizes'] : array();
+    ?>
+    <section class="mobilhaus-terrase-section section-padding">
+        <div class="container">
+            <h2 class="section-title"><?php echo esc_html($terrase_title); ?></h2>
+            <p class="section-subtitle">Hochwertige Terrassenoptionen passend zu Ihrem Mobilhaus</p>
+
+            <!-- Terrace content will be shown/hidden based on selected house color -->
+            <div id="terrase-content-<?php echo esc_attr($block_id); ?>">
+
+                <!-- Anthrazit Terraces -->
+                <div class="terrase-color-section" data-terrase-color="anthrazit" style="display: none;">
+                    <?php if ($anthrazit_sizes && is_array($anthrazit_sizes) && count($anthrazit_sizes) > 0): ?>
+
+                    <!-- Size Buttons -->
+                    <div class="terrase-size-buttons">
+                        <?php foreach ($anthrazit_sizes as $size_index => $size): ?>
+                            <button class="terrase-size-btn <?php echo $size_index === 0 ? 'active' : ''; ?>"
+                                    data-size-index="<?php echo $size_index; ?>"
+                                    onclick="switchTerraseSize(<?php echo $size_index; ?>, 'anthrazit', '<?php echo esc_js($block_id); ?>')">
+                                <?php echo esc_html($size['size_name']); ?>
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- Size Contents -->
+                    <?php foreach ($anthrazit_sizes as $size_index => $size): ?>
+                    <div class="terrase-size-content"
+                         id="terrase-size-anthrazit-<?php echo $size_index; ?>-<?php echo esc_attr($block_id); ?>"
+                         style="<?php echo $size_index === 0 ? '' : 'display: none;'; ?>">
+
+                        <?php if (isset($size['orientations']) && is_array($size['orientations']) && count($size['orientations']) > 0): ?>
+
+                        <!-- Orientation Buttons -->
+                        <div class="terrase-orientation-buttons">
+                            <?php foreach ($size['orientations'] as $or_index => $orientation): ?>
+                                <button class="terrase-orientation-btn <?php echo $or_index === 0 ? 'active' : ''; ?>"
+                                        data-orientation-index="<?php echo $or_index; ?>"
+                                        onclick="switchTerraseOrientation(<?php echo $size_index; ?>, <?php echo $or_index; ?>, 'anthrazit', '<?php echo esc_js($block_id); ?>')">
+                                    <?php echo esc_html($orientation['orientation_name']); ?>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <!-- Orientation Galleries -->
+                        <?php foreach ($size['orientations'] as $or_index => $orientation): ?>
+                        <div class="terrase-orientation-content"
+                             id="terrase-orientation-anthrazit-<?php echo $size_index; ?>-<?php echo $or_index; ?>-<?php echo esc_attr($block_id); ?>"
+                             style="<?php echo $or_index === 0 ? '' : 'display: none;'; ?>">
+                            <?php if (isset($orientation['gallery']) && is_array($orientation['gallery'])): ?>
+                            <div class="terrase-gallery-grid">
+                                <?php foreach ($orientation['gallery'] as $img_index => $image): ?>
+                                    <div class="terrase-gallery-item"
+                                         onclick="openMobilhausTerraseLightbox(<?php echo $size_index; ?>, <?php echo $or_index; ?>, <?php echo $img_index; ?>, 'anthrazit', '<?php echo esc_js($block_id); ?>')">
+                                        <img src="<?php echo esc_url($image['sizes']['medium'] ?? $image['url']); ?>"
+                                             alt="<?php echo esc_attr($size['size_name'] . ' - ' . $orientation['orientation_name'] . ' - Bild ' . ($img_index + 1)); ?>"
+                                             loading="lazy">
+                                        <div class="terrase-gallery-overlay">
+                                            <span class="zoom-icon">🔍</span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+
+                    <?php endif; ?>
+                </div>
+
+                <!-- Weiß Terraces -->
+                <div class="terrase-color-section" data-terrase-color="weiss" style="display: none;">
+                    <?php if ($weiss_sizes && is_array($weiss_sizes) && count($weiss_sizes) > 0): ?>
+
+                    <!-- Size Buttons -->
+                    <div class="terrase-size-buttons">
+                        <?php foreach ($weiss_sizes as $size_index => $size): ?>
+                            <button class="terrase-size-btn <?php echo $size_index === 0 ? 'active' : ''; ?>"
+                                    data-size-index="<?php echo $size_index; ?>"
+                                    onclick="switchTerraseSize(<?php echo $size_index; ?>, 'weiss', '<?php echo esc_js($block_id); ?>')">
+                                <?php echo esc_html($size['size_name']); ?>
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- Size Contents -->
+                    <?php foreach ($weiss_sizes as $size_index => $size): ?>
+                    <div class="terrase-size-content"
+                         id="terrase-size-weiss-<?php echo $size_index; ?>-<?php echo esc_attr($block_id); ?>"
+                         style="<?php echo $size_index === 0 ? '' : 'display: none;'; ?>">
+
+                        <?php if (isset($size['orientations']) && is_array($size['orientations']) && count($size['orientations']) > 0): ?>
+
+                        <!-- Orientation Buttons -->
+                        <div class="terrase-orientation-buttons">
+                            <?php foreach ($size['orientations'] as $or_index => $orientation): ?>
+                                <button class="terrase-orientation-btn <?php echo $or_index === 0 ? 'active' : ''; ?>"
+                                        data-orientation-index="<?php echo $or_index; ?>"
+                                        onclick="switchTerraseOrientation(<?php echo $size_index; ?>, <?php echo $or_index; ?>, 'weiss', '<?php echo esc_js($block_id); ?>')">
+                                    <?php echo esc_html($orientation['orientation_name']); ?>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <!-- Orientation Galleries -->
+                        <?php foreach ($size['orientations'] as $or_index => $orientation): ?>
+                        <div class="terrase-orientation-content"
+                             id="terrase-orientation-weiss-<?php echo $size_index; ?>-<?php echo $or_index; ?>-<?php echo esc_attr($block_id); ?>"
+                             style="<?php echo $or_index === 0 ? '' : 'display: none;'; ?>">
+                            <?php if (isset($orientation['gallery']) && is_array($orientation['gallery'])): ?>
+                            <div class="terrase-gallery-grid">
+                                <?php foreach ($orientation['gallery'] as $img_index => $image): ?>
+                                    <div class="terrase-gallery-item"
+                                         onclick="openMobilhausTerraseLightbox(<?php echo $size_index; ?>, <?php echo $or_index; ?>, <?php echo $img_index; ?>, 'weiss', '<?php echo esc_js($block_id); ?>')">
+                                        <img src="<?php echo esc_url($image['sizes']['medium'] ?? $image['url']); ?>"
+                                             alt="<?php echo esc_attr($size['size_name'] . ' - ' . $orientation['orientation_name'] . ' - Bild ' . ($img_index + 1)); ?>"
+                                             loading="lazy">
+                                        <div class="terrase-gallery-overlay">
+                                            <span class="zoom-icon">🔍</span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+
+                    <?php endif; ?>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Terrace Lightbox -->
+    <div id="terrase-lightbox-<?php echo esc_attr($block_id); ?>" class="terrase-lightbox" onclick="closeMobilhausTerraseLightbox('<?php echo esc_js($block_id); ?>')">
+        <button class="terrase-lightbox-close" onclick="closeMobilhausTerraseLightbox('<?php echo esc_js($block_id); ?>')">&times;</button>
+        <button class="terrase-lightbox-prev" onclick="event.stopPropagation(); navigateMobilhausTerraseLightbox(-1, '<?php echo esc_js($block_id); ?>')">‹</button>
+        <img class="terrase-lightbox-content" id="terrase-lightbox-img-<?php echo esc_attr($block_id); ?>" src="" alt="">
+        <button class="terrase-lightbox-next" onclick="event.stopPropagation(); navigateMobilhausTerraseLightbox(1, '<?php echo esc_js($block_id); ?>')">›</button>
+        <div class="terrase-lightbox-counter" id="terrase-lightbox-counter-<?php echo esc_attr($block_id); ?>"></div>
+    </div>
+    <?php endif; ?>
 
     <!-- INTERIOR COLOR SCHEMES -->
     <?php if ($interior_schemes && is_array($interior_schemes)): ?>
@@ -1185,6 +1341,190 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
         right: 10px;
     }
 }
+
+/* TERRACE SECTION */
+.mobilhaus-terrase-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.terrase-size-buttons,
+.terrase-orientation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.terrase-size-btn,
+.terrase-orientation-btn {
+    padding: 12px 24px;
+    background: white;
+    border: 2px solid #e5e7eb;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.terrase-size-btn:hover,
+.terrase-orientation-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.terrase-size-btn.active,
+.terrase-orientation-btn.active {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.terrase-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.terrase-gallery-item {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.terrase-gallery-item:hover {
+    transform: scale(1.02);
+}
+
+.terrase-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.terrase-gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(44, 140, 79, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.terrase-gallery-item:hover .terrase-gallery-overlay {
+    opacity: 1;
+}
+
+.terrase-gallery-overlay .zoom-icon {
+    font-size: 3rem;
+}
+
+/* Terrace Lightbox */
+.terrase-lightbox {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    align-items: center;
+    justify-content: center;
+}
+
+.terrase-lightbox.active {
+    display: flex;
+}
+
+.terrase-lightbox-content {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+.terrase-lightbox-close,
+.terrase-lightbox-prev,
+.terrase-lightbox-next {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    font-size: 3rem;
+    cursor: pointer;
+    padding: 10px 20px;
+    transition: background 0.3s ease;
+}
+
+.terrase-lightbox-close:hover,
+.terrase-lightbox-prev:hover,
+.terrase-lightbox-next:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.terrase-lightbox-close {
+    top: 20px;
+    right: 40px;
+}
+
+.terrase-lightbox-prev {
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.terrase-lightbox-next {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.terrase-lightbox-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 1.125rem;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+@media (max-width: 767px) {
+    .terrase-gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .terrase-size-buttons,
+    .terrase-orientation-buttons {
+        gap: 10px;
+    }
+
+    .terrase-size-btn,
+    .terrase-orientation-btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+
+    .terrase-lightbox-prev,
+    .terrase-lightbox-next {
+        font-size: 2rem;
+        padding: 8px 16px;
+    }
+
+    .terrase-lightbox-close {
+        font-size: 2.5rem;
+        right: 20px;
+        top: 10px;
+    }
+}
 </style>
 
 <script>
@@ -1226,6 +1566,12 @@ function switchExteriorColor(colorIndex) {
     images.forEach(img => {
         img.classList.toggle('active', img.dataset.colorIndex == colorIndex);
     });
+
+    // Update terrace display to match selected house color
+    window['currentColorIndex_<?php echo esc_js($block_id); ?>'] = colorIndex;
+    if (typeof window.updateTerraceColorDisplay === 'function') {
+        window.updateTerraceColorDisplay('<?php echo esc_js($block_id); ?>');
+    }
 }
 
 // Floor plan gallery selector
@@ -1441,5 +1787,144 @@ document.addEventListener('keydown', function(e) {
         else if (e.key === 'ArrowLeft') navigateLightbox(-1);
         else if (e.key === 'ArrowRight') navigateLightbox(1);
     }
+
+    // Terrace lightbox keyboard navigation
+    const terraseLightbox = document.getElementById('terrase-lightbox-<?php echo esc_js($block_id); ?>');
+    if (terraseLightbox && terraseLightbox.classList.contains('active')) {
+        if (e.key === 'Escape') window.closeMobilhausTerraseLightbox('<?php echo esc_js($block_id); ?>');
+        else if (e.key === 'ArrowLeft') window.navigateMobilhausTerraseLightbox(-1, '<?php echo esc_js($block_id); ?>');
+        else if (e.key === 'ArrowRight') window.navigateMobilhausTerraseLightbox(1, '<?php echo esc_js($block_id); ?>');
+    }
 });
+
+// ========== TERRACE FUNCTIONS ==========
+
+// Store terrace data
+<?php if ($terrase_section && isset($terrase_section['enable_terrase']) && $terrase_section['enable_terrase']): ?>
+window['terraseData_anthrazit_<?php echo esc_js($block_id); ?>'] = <?php echo json_encode($anthrazit_sizes ?: []); ?>;
+window['terraseData_weiss_<?php echo esc_js($block_id); ?>'] = <?php echo json_encode($weiss_sizes ?: []); ?>;
+window['currentTerraseSizeIndex_<?php echo esc_js($block_id); ?>'] = 0;
+window['currentTerraseOrientationIndex_<?php echo esc_js($block_id); ?>'] = 0;
+window['currentTerraseImageIndex_<?php echo esc_js($block_id); ?>'] = 0;
+window['currentTerraseColor_<?php echo esc_js($block_id); ?>'] = '';
+<?php endif; ?>
+
+// Switch terrace size
+window.switchTerraseSize = function(sizeIndex, color, blockId) {
+    const sizeContents = document.querySelectorAll(`[id^="terrase-size-${color}-"][id$="-${blockId}"]`);
+    const sizeBtns = document.querySelectorAll(`[data-terrase-color="${color}"] .terrase-size-btn`);
+
+    sizeBtns.forEach(btn => btn.classList.remove('active'));
+    if (sizeBtns[sizeIndex]) {
+        sizeBtns[sizeIndex].classList.add('active');
+    }
+
+    sizeContents.forEach((content, i) => {
+        content.style.display = i === sizeIndex ? 'block' : 'none';
+    });
+
+    window['currentTerraseSizeIndex_' + blockId] = sizeIndex;
+    window['currentTerraseOrientationIndex_' + blockId] = 0; // Reset orientation
+};
+
+// Switch terrace orientation
+window.switchTerraseOrientation = function(sizeIndex, orientationIndex, color, blockId) {
+    const sizeContent = document.getElementById(`terrase-size-${color}-${sizeIndex}-${blockId}`);
+    if (!sizeContent) return;
+
+    const orientationContents = sizeContent.querySelectorAll(`[id^="terrase-orientation-${color}-${sizeIndex}-"]`);
+    const orientationBtns = sizeContent.querySelectorAll('.terrase-orientation-btn');
+
+    orientationBtns.forEach(btn => btn.classList.remove('active'));
+    if (orientationBtns[orientationIndex]) {
+        orientationBtns[orientationIndex].classList.add('active');
+    }
+
+    orientationContents.forEach((content, i) => {
+        content.style.display = i === orientationIndex ? 'block' : 'none';
+    });
+
+    window['currentTerraseOrientationIndex_' + blockId] = orientationIndex;
+};
+
+// Open terrace lightbox
+window.openMobilhausTerraseLightbox = function(sizeIndex, orientationIndex, imageIndex, color, blockId) {
+    const data = window['terraseData_' + color + '_' + blockId];
+    if (!data || !data[sizeIndex]) return;
+
+    const size = data[sizeIndex];
+    if (!size.orientations || !size.orientations[orientationIndex]) return;
+
+    const orientation = size.orientations[orientationIndex];
+    const image = orientation.gallery[imageIndex];
+
+    window['currentTerraseSizeIndex_' + blockId] = sizeIndex;
+    window['currentTerraseOrientationIndex_' + blockId] = orientationIndex;
+    window['currentTerraseImageIndex_' + blockId] = imageIndex;
+    window['currentTerraseColor_' + blockId] = color;
+
+    document.getElementById('terrase-lightbox-img-' + blockId).src = image.url;
+    document.getElementById('terrase-lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${orientation.gallery.length}`;
+    document.getElementById('terrase-lightbox-' + blockId).classList.add('active');
+    document.body.style.overflow = 'hidden';
+};
+
+// Close terrace lightbox
+window.closeMobilhausTerraseLightbox = function(blockId) {
+    document.getElementById('terrase-lightbox-' + blockId).classList.remove('active');
+    document.body.style.overflow = 'auto';
+};
+
+// Navigate terrace lightbox
+window.navigateMobilhausTerraseLightbox = function(direction, blockId) {
+    const color = window['currentTerraseColor_' + blockId];
+    const sizeIndex = window['currentTerraseSizeIndex_' + blockId];
+    const orientationIndex = window['currentTerraseOrientationIndex_' + blockId];
+    let imageIndex = window['currentTerraseImageIndex_' + blockId];
+
+    const data = window['terraseData_' + color + '_' + blockId];
+    const size = data[sizeIndex];
+    const orientation = size.orientations[orientationIndex];
+    const gallery = orientation.gallery;
+
+    imageIndex += direction;
+    if (imageIndex < 0) imageIndex = gallery.length - 1;
+    if (imageIndex >= gallery.length) imageIndex = 0;
+
+    window['currentTerraseImageIndex_' + blockId] = imageIndex;
+
+    document.getElementById('terrase-lightbox-img-' + blockId).src = gallery[imageIndex].url;
+    document.getElementById('terrase-lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${gallery.length}`;
+};
+
+// Update terrace display based on selected house color
+window.updateTerraceColorDisplay = function(blockId) {
+    const currentColorIndex = window['currentColorIndex_' + blockId];
+    const colorVariants = window['colorVariants_' + blockId];
+
+    if (!colorVariants || currentColorIndex === undefined) return;
+
+    const currentHouseColor = colorVariants[currentColorIndex].color_name.toLowerCase();
+    const terraseSections = document.querySelectorAll('#terrase-content-' + blockId + ' .terrase-color-section');
+
+    terraseSections.forEach(section => {
+        const terraseColor = section.getAttribute('data-terrase-color');
+        // Show anthrazit terrace if house color contains "anthrazit"
+        // Show weiss terrace if house color contains "weiß" or "weiss" or "white"
+        if ((terraseColor === 'anthrazit' && currentHouseColor.includes('anthrazit')) ||
+            (terraseColor === 'weiss' && (currentHouseColor.includes('weiß') || currentHouseColor.includes('weiss') || currentHouseColor.includes('white')))) {
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+        }
+    });
+};
+
+// Initialize terrace display on page load
+<?php if ($terrase_section && isset($terrase_section['enable_terrase']) && $terrase_section['enable_terrase']): ?>
+// Wait a bit for color switching to initialize
+setTimeout(function() {
+    window.updateTerraceColorDisplay('<?php echo esc_js($block_id); ?>');
+}, 100);
+<?php endif; ?>
 </script>

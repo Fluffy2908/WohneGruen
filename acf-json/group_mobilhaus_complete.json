@@ -222,6 +222,171 @@
             ]
         },
         {
+            "key": "field_mobilhaus_terrase_section",
+            "label": "Terrassen Optionen",
+            "name": "mobilhaus_terrase_section",
+            "type": "group",
+            "instructions": "Terrassenoptionen für dieses Mobilhaus (automatisch farbabgestimmt)",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_enable_terrase",
+                    "label": "Terrasse aktivieren",
+                    "name": "enable_terrase",
+                    "type": "true_false",
+                    "instructions": "Terrassen-Bereich auf dieser Seite anzeigen",
+                    "default_value": 0,
+                    "ui": 1
+                },
+                {
+                    "key": "field_terrase_title",
+                    "label": "Terrassen Titel",
+                    "name": "terrase_title",
+                    "type": "text",
+                    "instructions": "Titel für Terrassen-Bereich (leer lassen für Standard: 'Terrassen Optionen')",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_enable_terrase",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "default_value": "",
+                    "placeholder": "Terrassen Optionen"
+                },
+                {
+                    "key": "field_terrase_anthrazit_sizes",
+                    "label": "Anthrazit Terrassen",
+                    "name": "terrase_anthrazit_sizes",
+                    "type": "repeater",
+                    "instructions": "Größenoptionen für Anthrazit Terrassen",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_enable_terrase",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "min": 0,
+                    "max": 3,
+                    "layout": "block",
+                    "button_label": "Größe hinzufügen",
+                    "sub_fields": [
+                        {
+                            "key": "field_anthrazit_size_name",
+                            "label": "Größenname",
+                            "name": "size_name",
+                            "type": "text",
+                            "required": 1,
+                            "placeholder": "z.B. Komfort, Komfort Plus"
+                        },
+                        {
+                            "key": "field_anthrazit_orientations",
+                            "label": "Ausrichtungen",
+                            "name": "orientations",
+                            "type": "repeater",
+                            "instructions": "Vertikal, Horizontal, Gemischt",
+                            "min": 1,
+                            "max": 3,
+                            "layout": "block",
+                            "button_label": "Ausrichtung hinzufügen",
+                            "sub_fields": [
+                                {
+                                    "key": "field_anthrazit_orientation_name",
+                                    "label": "Ausrichtung",
+                                    "name": "orientation_name",
+                                    "type": "text",
+                                    "required": 1,
+                                    "placeholder": "z.B. Horizontal, Vertikal, Gemischt"
+                                },
+                                {
+                                    "key": "field_anthrazit_orientation_gallery",
+                                    "label": "Galerie",
+                                    "name": "gallery",
+                                    "type": "gallery",
+                                    "instructions": "4-8 Bilder für diese Ausrichtung",
+                                    "required": 1,
+                                    "min": 4,
+                                    "max": 8,
+                                    "insert": "append",
+                                    "preview_size": "thumbnail",
+                                    "return_format": "array"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "key": "field_terrase_weiss_sizes",
+                    "label": "Weiß Terrassen",
+                    "name": "terrase_weiss_sizes",
+                    "type": "repeater",
+                    "instructions": "Größenoptionen für Weiß Terrassen",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_enable_terrase",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "min": 0,
+                    "max": 3,
+                    "layout": "block",
+                    "button_label": "Größe hinzufügen",
+                    "sub_fields": [
+                        {
+                            "key": "field_weiss_size_name",
+                            "label": "Größenname",
+                            "name": "size_name",
+                            "type": "text",
+                            "required": 1,
+                            "placeholder": "z.B. Komfort, Komfort Plus"
+                        },
+                        {
+                            "key": "field_weiss_orientations",
+                            "label": "Ausrichtungen",
+                            "name": "orientations",
+                            "type": "repeater",
+                            "instructions": "Vertikal, Horizontal, Gemischt",
+                            "min": 1,
+                            "max": 3,
+                            "layout": "block",
+                            "button_label": "Ausrichtung hinzufügen",
+                            "sub_fields": [
+                                {
+                                    "key": "field_weiss_orientation_name",
+                                    "label": "Ausrichtung",
+                                    "name": "orientation_name",
+                                    "type": "text",
+                                    "required": 1,
+                                    "placeholder": "z.B. Horizontal, Vertikal, Gemischt"
+                                },
+                                {
+                                    "key": "field_weiss_orientation_gallery",
+                                    "label": "Galerie",
+                                    "name": "gallery",
+                                    "type": "gallery",
+                                    "instructions": "4-8 Bilder für diese Ausrichtung",
+                                    "required": 1,
+                                    "min": 4,
+                                    "max": 8,
+                                    "insert": "append",
+                                    "preview_size": "thumbnail",
+                                    "return_format": "array"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "key": "field_mobilhaus_interior_schemes",
             "label": "Innenausstattung Farbschemata",
             "name": "mobilhaus_interior_schemes",

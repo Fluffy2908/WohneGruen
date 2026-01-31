@@ -15,10 +15,7 @@ require_once get_template_directory() . '/inc/enqueue.php';
 // Custom Post Type: Mobilhaus
 require_once get_template_directory() . '/inc/cpt/cpt-mobilhaus.php';
 
-// Custom Post Type: Terrase
-require_once get_template_directory() . '/inc/cpt/cpt-terrase.php';
-
-// ACF Blocks Registration (7 complete blocks)
+// ACF Blocks Registration (6 complete blocks)
 require_once get_template_directory() . '/inc/acf.php';
 
 // Contact Form Handler
