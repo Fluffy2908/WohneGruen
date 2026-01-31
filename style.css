@@ -578,6 +578,99 @@ ul {
     width: 100%;
 }
 
+/* Dropdown Menu Styles */
+.nav-menu {
+    position: relative;
+}
+
+.nav-menu > a {
+    position: relative;
+}
+
+.nav-menu > a.has-dropdown {
+    padding-right: 1.25rem;
+}
+
+.dropdown-arrow {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.6rem;
+    opacity: 0.6;
+    transition: transform 0.3s ease;
+}
+
+.sub-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.nav-menu > a.has-dropdown:hover + .sub-menu,
+.sub-menu:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Alternative: wrap in container div for better hover handling */
+.nav-menu > .menu-item-has-children {
+    position: relative;
+}
+
+.nav-menu > .menu-item-has-children:hover .sub-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.nav-menu > .menu-item-has-children:hover .dropdown-arrow {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.sub-menu li {
+    list-style: none;
+}
+
+.sub-menu a {
+    display: block;
+    padding: 0.75rem 1.25rem;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 0.9375rem;
+}
+
+.sub-menu a::after {
+    display: none;
+}
+
+.sub-menu a:hover {
+    background: var(--color-background);
+    color: var(--color-primary);
+    padding-left: 1.5rem;
+}
+
+.sub-menu a.current-menu-item,
+.sub-menu a.current_page_item {
+    background: var(--color-background);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
 .nav-right {
     display: none;
     align-items: center;
@@ -733,6 +826,60 @@ ul {
 .mobile-menu-items a.current_page_item::before,
 .mobile-menu-items a.current-menu-ancestor::before {
     width: 0.75rem;
+}
+
+/* Mobile Submenu Styles */
+.mobile-menu-items .menu-item-has-children {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.mobile-menu-items .submenu-toggle {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-top: -0.5rem;
+    font-size: 0.875rem;
+    transition: transform 0.3s ease;
+}
+
+.mobile-menu-items .submenu-open .submenu-toggle {
+    transform: rotate(180deg);
+}
+
+.mobile-menu-items .sub-menu {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-left: 1.5rem;
+    width: 100%;
+}
+
+.mobile-menu-items .submenu-open .sub-menu {
+    display: flex;
+}
+
+.mobile-menu-items .sub-menu li {
+    list-style: none;
+    width: 100%;
+    text-align: center;
+}
+
+.mobile-menu-items .sub-menu a {
+    font-size: 1.25rem;
+    opacity: 0.85;
+}
+
+.mobile-menu-items .sub-menu a.current-menu-item,
+.mobile-menu-items .sub-menu a.current_page_item {
+    opacity: 1;
+    font-weight: 700;
 }
 
 /* ==========================================================================

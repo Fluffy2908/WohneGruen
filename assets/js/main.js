@@ -559,3 +559,41 @@ function initColorSliders() {
         */
     });
 }
+
+/**
+ * Mobile Dropdown Menu Toggle
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (!mobileMenu) return;
+
+    // Find all menu items with submenus in mobile menu
+    const menuItemsWithChildren = mobileMenu.querySelectorAll('.menu-item-has-children');
+
+    menuItemsWithChildren.forEach(function(item) {
+        const link = item.querySelector('a');
+        const submenu = item.querySelector('.sub-menu');
+
+        if (link && submenu) {
+            // Create toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.classList.add('submenu-toggle');
+            toggleBtn.innerHTML = '<span class="toggle-icon">▼</span>';
+            toggleBtn.setAttribute('aria-label', 'Untermenü öffnen');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+
+            // Insert toggle button after link
+            link.parentNode.insertBefore(toggleBtn, link.nextSibling);
+
+            // Toggle submenu on button click
+            toggleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const isOpen = item.classList.toggle('submenu-open');
+                toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                toggleBtn.setAttribute('aria-label', isOpen ? 'Untermenü schließen' : 'Untermenü öffnen');
+            });
+        }
+    });
+});

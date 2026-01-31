@@ -56,15 +56,73 @@ function wohnegruen_register_block_category($categories) {
 add_filter('block_categories_all', 'wohnegruen_register_block_category', 10, 1);
 
 /**
- * Custom Menu Walker for Navigation
+ * Custom Menu Walker for Navigation with Submenu Support
  */
 class wohnegruen_Nav_Walker extends Walker_Nav_Menu {
+    // Start level wrapper (ul)
+    function start_lvl(&$output, $depth = 0, $args = null) {
+        $indent = str_repeat("\t", $depth);
+        $output .= "\n$indent<ul class=\"sub-menu\">\n";
+    }
+
+    // End level wrapper
+    function end_lvl(&$output, $depth = 0, $args = null) {
+        $indent = str_repeat("\t", $depth);
+        $output .= "$indent</ul>\n";
+    }
+
+    // Start menu item
     function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
+        $indent = ($depth) ? str_repeat("\t", $depth) : '';
+
         $classes = empty($item->classes) ? array() : (array) $item->classes;
+
+        // Add 'menu-item-has-children' class if item has children
+        if (in_array('menu-item-has-children', $item->classes)) {
+            $classes[] = 'has-dropdown';
+        }
+
+        // Add current item classes
         $class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args, $depth));
         $class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
 
-        $output .= '<a href="' . esc_url($item->url) . '"' . $class_names . '>' . esc_html($item->title) . '</a>';
+        // If depth > 0, wrap in li, otherwise just output the link
+        if ($depth > 0) {
+            $output .= $indent . '<li' . $class_names . '>';
+        }
+
+        $atts = array();
+        $atts['href'] = !empty($item->url) ? $item->url : '';
+        $atts = apply_filters('nav_menu_link_attributes', $atts, $item, $args, $depth);
+
+        $attributes = '';
+        foreach ($atts as $attr => $value) {
+            if (!empty($value)) {
+                $value = ('href' === $attr) ? esc_url($value) : esc_attr($value);
+                $attributes .= ' ' . $attr . '="' . $value . '"';
+            }
+        }
+
+        $title = apply_filters('the_title', $item->title, $item->ID);
+
+        $item_output = '<a' . $attributes . ($depth === 0 ? $class_names : '') . '>';
+        $item_output .= $title;
+
+        // Add dropdown arrow if has children
+        if (in_array('menu-item-has-children', $item->classes) && $depth === 0) {
+            $item_output .= '<span class="dropdown-arrow">▼</span>';
+        }
+
+        $item_output .= '</a>';
+
+        $output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
+    }
+
+    // End menu item
+    function end_el(&$output, $item, $depth = 0, $args = null) {
+        if ($depth > 0) {
+            $output .= "</li>\n";
+        }
     }
 }
 
@@ -132,6 +190,27 @@ function wohnegruen_get_field($field_name, $post_id = false, $default = '') {
 function wohnegruen_get_option($field_name, $default = '') {
     return wohnegruen_get_field($field_name, 'option', $default);
 }
+
+/**
+ * Add current-menu-ancestor class to Modelle menu item when viewing Mobilhaus CPT
+ */
+function wohnegruen_mobilhaus_menu_ancestor($classes, $item) {
+    // Check if we're on a single mobilhaus post
+    if (is_singular('mobilhaus')) {
+        // Get the Modelle page
+        $page_ids = get_option('wohnegruen_page_ids', array());
+        $modelle_id = isset($page_ids['modelle']) ? $page_ids['modelle'] : 0;
+
+        // If this menu item links to the Modelle page, add current-menu-ancestor
+        if ($modelle_id && $item->object_id == $modelle_id) {
+            $classes[] = 'current-menu-ancestor';
+            $classes[] = 'current-menu-parent';
+        }
+    }
+
+    return $classes;
+}
+add_filter('nav_menu_css_class', 'wohnegruen_mobilhaus_menu_ancestor', 10, 2);
 
 /**
  * Create required pages on theme activation
