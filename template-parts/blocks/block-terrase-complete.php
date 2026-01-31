@@ -230,11 +230,11 @@ if ($hero_image && isset($hero_image['url'])) {
     </section>
 
     <!-- Lightbox -->
-    <div id="lightbox-<?php echo esc_attr($block_id); ?>" class="lightbox" onclick="closeTerraseL ightbox('<?php echo esc_js($block_id); ?>')">
-        <button class="lightbox-close" onclick="closeTerraseL ightbox('<?php echo esc_js($block_id); ?>')">&times;</button>
-        <button class="lightbox-prev" onclick="event.stopPropagation(); navigateTerraseL ightbox(-1, '<?php echo esc_js($block_id); ?>')">‹</button>
+    <div id="lightbox-<?php echo esc_attr($block_id); ?>" class="lightbox" onclick="closeTerraseLightbox('<?php echo esc_js($block_id); ?>')">
+        <button class="lightbox-close" onclick="closeTerraseLightbox('<?php echo esc_js($block_id); ?>')">&times;</button>
+        <button class="lightbox-prev" onclick="event.stopPropagation(); navigateTerraseLightbox(-1, '<?php echo esc_js($block_id); ?>')">‹</button>
         <img class="lightbox-content" id="lightbox-img-<?php echo esc_attr($block_id); ?>" src="" alt="">
-        <button class="lightbox-next" onclick="event.stopPropagation(); navigateTerraseL ightbox(1, '<?php echo esc_js($block_id); ?>')">›</button>
+        <button class="lightbox-next" onclick="event.stopPropagation(); navigateTerraseLightbox(1, '<?php echo esc_js($block_id); ?>')">›</button>
         <div class="lightbox-counter" id="lightbox-counter-<?php echo esc_attr($block_id); ?>"></div>
     </div>
     <?php endif; ?>
@@ -766,7 +766,7 @@ function switchPureOrientation(colorIndex, sizeIndex, orientationIndex, blockId)
 }
 
 // Open Lightbox (Nature)
-function openTerraseL ightbox(colorIndex, orientationIndex, imageIndex, blockId) {
+function openTerraseLightbox(colorIndex, orientationIndex, imageIndex, blockId) {
     const data = window['terraseData_' + blockId];
     const color = data[colorIndex];
     const orientation = color.nature_orientations[orientationIndex];
@@ -800,12 +800,12 @@ function openPureLightbox(colorIndex, sizeIndex, orientationIndex, imageIndex, b
 }
 
 // Close Lightbox
-function closeTerraseL ightbox(blockId) {
+function closeTerraseLightbox(blockId) {
     document.getElementById('lightbox-' + blockId).classList.remove('active');
 }
 
 // Navigate Lightbox
-function navigateTerraseL ightbox(direction, blockId) {
+function navigateTerraseLightbox(direction, blockId) {
     const data = window['terraseData_' + blockId];
     const terraseType = window['terraseType_' + blockId];
     const colorIndex = window['currentColorIndex_' + blockId];
@@ -839,9 +839,9 @@ function navigateTerraseL ightbox(direction, blockId) {
 document.addEventListener('keydown', function(e) {
     const lightbox = document.getElementById('lightbox-<?php echo esc_js($block_id); ?>');
     if (lightbox && lightbox.classList.contains('active')) {
-        if (e.key === 'Escape') closeTerraseL ightbox('<?php echo esc_js($block_id); ?>');
-        if (e.key === 'ArrowLeft') navigateTerraseL ightbox(-1, '<?php echo esc_js($block_id); ?>');
-        if (e.key === 'ArrowRight') navigateTerraseL ightbox(1, '<?php echo esc_js($block_id); ?>');
+        if (e.key === 'Escape') closeTerraseLightbox('<?php echo esc_js($block_id); ?>');
+        if (e.key === 'ArrowLeft') navigateTerraseLightbox(-1, '<?php echo esc_js($block_id); ?>');
+        if (e.key === 'ArrowRight') navigateTerraseLightbox(1, '<?php echo esc_js($block_id); ?>');
     }
 });
 </script>
