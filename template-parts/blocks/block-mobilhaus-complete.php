@@ -248,13 +248,14 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     <!-- TERRACE OPTIONS SECTION -->
     <?php if ($terrase_section && isset($terrase_section['enable_terrase']) && $terrase_section['enable_terrase']):
         $terrase_title = !empty($terrase_section['terrase_title']) ? $terrase_section['terrase_title'] : 'Terrassen Optionen';
+        $terrase_subtitle = !empty($terrase_section['terrase_subtitle']) ? $terrase_section['terrase_subtitle'] : 'Hochwertige Terrassenoptionen passend zu Ihrem Mobilhaus';
         $anthrazit_sizes = isset($terrase_section['terrase_anthrazit_sizes']) ? $terrase_section['terrase_anthrazit_sizes'] : array();
         $weiss_sizes = isset($terrase_section['terrase_weiss_sizes']) ? $terrase_section['terrase_weiss_sizes'] : array();
     ?>
     <section class="mobilhaus-terrase-section section-padding">
         <div class="container">
             <h2 class="section-title"><?php echo esc_html($terrase_title); ?></h2>
-            <p class="section-subtitle">Hochwertige Terrassenoptionen passend zu Ihrem Mobilhaus</p>
+            <p class="section-subtitle"><?php echo esc_html($terrase_subtitle); ?></p>
 
             <!-- Terrace content will be shown/hidden based on selected house color -->
             <div id="terrase-content-<?php echo esc_attr($block_id); ?>">

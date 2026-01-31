@@ -264,7 +264,7 @@
                     "label": "Terrassen Titel",
                     "name": "terrase_title",
                     "type": "text",
-                    "instructions": "Titel für Terrassen-Bereich (leer lassen für Standard: 'Terrassen Optionen')",
+                    "instructions": "Großer grüner Titel für Terrassen-Bereich",
                     "conditional_logic": [
                         [
                             {
@@ -274,8 +274,26 @@
                             }
                         ]
                     ],
-                    "default_value": "",
+                    "default_value": "Terrassen Optionen",
                     "placeholder": "Terrassen Optionen"
+                },
+                {
+                    "key": "field_terrase_subtitle",
+                    "label": "Terrassen Untertitel",
+                    "name": "terrase_subtitle",
+                    "type": "text",
+                    "instructions": "Grauer Text unter dem Titel",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_enable_terrase",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "default_value": "Hochwertige Terrassenoptionen passend zu Ihrem Mobilhaus",
+                    "placeholder": "Hochwertige Terrassenoptionen passend zu Ihrem Mobilhaus"
                 },
                 {
                     "key": "field_terrase_anthrazit_sizes",
