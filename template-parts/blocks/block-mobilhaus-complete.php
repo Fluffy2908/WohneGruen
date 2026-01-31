@@ -1965,18 +1965,14 @@ window.updateTerraceColorDisplay = function(blockId) {
     const currentColorIndex = window['currentColorIndex_' + blockId];
     const colorVariants = window['colorVariants_' + blockId];
 
-    console.log('Updating terrace display:', {blockId, currentColorIndex, colorVariants});
 
     if (!colorVariants || currentColorIndex === undefined) {
-        console.warn('No color variants or index found');
         return;
     }
 
     const currentHouseColor = colorVariants[currentColorIndex].color_name.toLowerCase();
-    console.log('Current house color:', currentHouseColor);
 
     const terraseSections = document.querySelectorAll('#terrase-content-' + blockId + ' .terrase-color-section');
-    console.log('Found terrace sections:', terraseSections.length);
 
     terraseSections.forEach(section => {
         const terraseColor = section.getAttribute('data-terrase-color');
@@ -2003,7 +1999,6 @@ window.updateTerraceColorDisplay = function(blockId) {
                         currentHouseColor.includes('light');
         }
 
-        console.log(`Section ${terraseColor}: color="${currentHouseColor}", shouldShow = ${shouldShow}`);
         section.style.display = shouldShow ? 'block' : 'none';
     });
 };
@@ -2012,13 +2007,11 @@ window.updateTerraceColorDisplay = function(blockId) {
 <?php if ($terrase_section && isset($terrase_section['enable_terrase']) && $terrase_section['enable_terrase']): ?>
 // Initialize on DOM ready and also with timeout as fallback
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM ready - initializing terrace display');
     window.updateTerraceColorDisplay('<?php echo esc_js($block_id); ?>');
 });
 
 // Fallback timeout
 setTimeout(function() {
-    console.log('Timeout fallback - initializing terrace display');
     window.updateTerraceColorDisplay('<?php echo esc_js($block_id); ?>');
 }, 200);
 <?php endif; ?>

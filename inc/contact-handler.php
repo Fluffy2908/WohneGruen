@@ -80,21 +80,27 @@ function wohnegruen_handle_contact_form() {
     );
 
     // Log attempt for debugging
-    error_log('WohneGruen Contact Form: Attempting to send email to ' . $to);
-    error_log('From: ' . $vorname . ' ' . $nachname . ' <' . $email . '>');
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('WohneGruen Contact Form: Attempting to send email to ' . $to);
+        error_log('From: ' . $vorname . ' ' . $nachname . ' <' . $email . '>');
+    }
 
     // Send email
     $sent = wp_mail($to, $email_subject, $email_body, $headers);
 
     if ($sent) {
-        error_log('WohneGruen Contact Form: Email sent successfully');
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('WohneGruen Contact Form: Email sent successfully');
+        }
         wp_send_json_success(array(
             'message' => 'Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet. Wir werden uns in Kürze bei Ihnen melden.'
         ));
     } else {
         // Log error for debugging
-        error_log('WohneGruen Contact Form: Email failed to send to ' . $to);
-        error_log('Last error: ' . print_r(error_get_last(), true));
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('WohneGruen Contact Form: Email failed to send to ' . $to);
+            error_log('Last error: ' . print_r(error_get_last(), true));
+        }
         wp_send_json_error(array(
             'message' => 'Es gab ein Problem beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut oder kontaktieren Sie uns telefonisch.'
         ));
