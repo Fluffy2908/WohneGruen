@@ -1921,12 +1921,30 @@ window.updateTerraceColorDisplay = function(blockId) {
 
     terraseSections.forEach(section => {
         const terraseColor = section.getAttribute('data-terrase-color');
-        // Show anthrazit terrace if house color contains "anthrazit"
-        // Show weiss terrace if house color contains "weiß" or "weiss" or "white"
-        const shouldShow = (terraseColor === 'anthrazit' && currentHouseColor.includes('anthrazit')) ||
-                          (terraseColor === 'weiss' && (currentHouseColor.includes('weiß') || currentHouseColor.includes('weiss') || currentHouseColor.includes('white')));
 
-        console.log(`Section ${terraseColor}: should show = ${shouldShow}`);
+        let shouldShow = false;
+
+        // Match anthrazit: look for anthrazit, anthracite, grau, gray, dark
+        if (terraseColor === 'anthrazit') {
+            shouldShow = currentHouseColor.includes('anthrazit') ||
+                        currentHouseColor.includes('anthracite') ||
+                        currentHouseColor.includes('grau') ||
+                        currentHouseColor.includes('gray') ||
+                        currentHouseColor.includes('dunkel') ||
+                        currentHouseColor.includes('dark') ||
+                        currentColorIndex === 0; // Fallback: if it's the first color, assume it's anthrazit
+        }
+
+        // Match weiss: look for weiß, weiss, white, hell, light
+        if (terraseColor === 'weiss') {
+            shouldShow = currentHouseColor.includes('weiß') ||
+                        currentHouseColor.includes('weiss') ||
+                        currentHouseColor.includes('white') ||
+                        currentHouseColor.includes('hell') ||
+                        currentHouseColor.includes('light');
+        }
+
+        console.log(`Section ${terraseColor}: color="${currentHouseColor}", shouldShow = ${shouldShow}`);
         section.style.display = shouldShow ? 'block' : 'none';
     });
 };
