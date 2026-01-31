@@ -571,10 +571,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuItemsWithChildren = mobileMenu.querySelectorAll('.menu-item-has-children');
 
     menuItemsWithChildren.forEach(function(item) {
-        const link = item.querySelector('a');
+        const link = item.querySelector(':scope > a');
         const submenu = item.querySelector('.sub-menu');
 
         if (link && submenu) {
+            // Create wrapper div for link and toggle
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('menu-item-wrapper');
+
             // Create toggle button
             const toggleBtn = document.createElement('button');
             toggleBtn.classList.add('submenu-toggle');
@@ -582,8 +586,10 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleBtn.setAttribute('aria-label', 'Untermenü öffnen');
             toggleBtn.setAttribute('aria-expanded', 'false');
 
-            // Insert toggle button after link
-            link.parentNode.insertBefore(toggleBtn, link.nextSibling);
+            // Move link into wrapper
+            link.parentNode.insertBefore(wrapper, link);
+            wrapper.appendChild(link);
+            wrapper.appendChild(toggleBtn);
 
             // Toggle submenu on button click
             toggleBtn.addEventListener('click', function(e) {

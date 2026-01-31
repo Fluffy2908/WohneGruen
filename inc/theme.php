@@ -36,14 +36,11 @@ function wohnegruen_setup() {
 add_action('after_setup_theme', 'wohnegruen_setup');
 
 /**
- * Disable wpautop for pages to prevent unwanted <p> tags around blocks
+ * Disable wpautop completely to prevent unwanted <p> tags around blocks
+ * Run at priority 0 to execute very early
  */
-function wohnegruen_disable_wpautop_for_pages() {
-    if (is_page()) {
-        remove_filter('the_content', 'wpautop');
-    }
-}
-add_action('wp', 'wohnegruen_disable_wpautop_for_pages');
+remove_filter('the_content', 'wpautop');
+remove_filter('the_excerpt', 'wpautop');
 
 /**
  * Register Custom Block Category for ACF Blocks

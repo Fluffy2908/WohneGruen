@@ -842,17 +842,23 @@ ul {
     width: 0.75rem;
 }
 
-/* Active page state in mobile menu */
-.mobile-menu-items a.current-menu-item,
-.mobile-menu-items a.current_page_item,
-.mobile-menu-items a.current-menu-ancestor {
+/* Mobile menu list items */
+.mobile-menu-items > li {
+    list-style: none;
+    width: 100%;
+}
+
+/* Active page state in mobile menu - target li elements */
+.mobile-menu-items li.current-menu-item > a,
+.mobile-menu-items li.current_page_item > a,
+.mobile-menu-items li.current-menu-ancestor > a {
     color: var(--color-primary);
     padding-left: 1.5rem;
 }
 
-.mobile-menu-items a.current-menu-item::before,
-.mobile-menu-items a.current_page_item::before,
-.mobile-menu-items a.current-menu-ancestor::before {
+.mobile-menu-items li.current-menu-item > a::before,
+.mobile-menu-items li.current_page_item > a::before,
+.mobile-menu-items li.current-menu-ancestor > a::before {
     width: 0.75rem;
 }
 
@@ -864,15 +870,24 @@ ul {
     width: 100%;
 }
 
+/* Container for link and toggle button */
+.mobile-menu-items .menu-item-has-children > .menu-item-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 300px;
+}
+
 .mobile-menu-items .submenu-toggle {
     background: none;
     border: none;
     color: var(--color-primary);
     cursor: pointer;
-    padding: 0.5rem;
-    margin-top: -0.5rem;
-    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
     transition: transform 0.3s ease;
+    flex-shrink: 0;
 }
 
 .mobile-menu-items .submenu-open .submenu-toggle {
@@ -885,7 +900,7 @@ ul {
     align-items: center;
     gap: 1rem;
     margin-top: 1rem;
-    padding-left: 1.5rem;
+    padding-left: 0;
     width: 100%;
 }
 
@@ -904,8 +919,10 @@ ul {
     opacity: 0.85;
 }
 
-.mobile-menu-items .sub-menu a.current-menu-item,
-.mobile-menu-items .sub-menu a.current_page_item {
+/* Active submenu item */
+.mobile-menu-items .sub-menu li.current-menu-item > a,
+.mobile-menu-items .sub-menu li.current_page_item > a {
+    color: var(--color-primary);
     opacity: 1;
     font-weight: 700;
 }
