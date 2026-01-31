@@ -863,6 +863,22 @@ ul {
 .mobile-menu-items li.current-menu-ancestor > a {
     color: var(--color-primary);
     font-weight: 700;
+    position: relative;
+    padding-bottom: 0.25rem;
+}
+
+/* Green underline for active menu item on mobile */
+.mobile-menu-items li.current-menu-item > a::after,
+.mobile-menu-items li.current_page_item > a::after,
+.mobile-menu-items li.current-menu-ancestor > a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-primary);
 }
 
 /* Mobile Submenu Styles */
