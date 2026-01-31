@@ -101,6 +101,16 @@
             "media_upload": 0
         },
         {
+            "key": "field_terrase_gallery_title",
+            "label": "Galerie Sektion Titel",
+            "name": "terrase_gallery_title",
+            "type": "text",
+            "instructions": "Titel für den Galerie-Bereich (leer lassen für Standard: 'Farbvarianten & Galerie')",
+            "required": 0,
+            "default_value": "",
+            "placeholder": "Farbvarianten & Galerie"
+        },
+        {
             "key": "field_terrase_color_variants",
             "label": "Farbvarianten",
             "name": "terrase_color_variants",

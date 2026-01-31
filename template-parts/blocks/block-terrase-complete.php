@@ -13,6 +13,7 @@ $description_title = get_field('terrase_description_title');
 $description_text = get_field('terrase_description_text');
 $tech_specs = get_field('terrase_tech_specs');
 $tech_description = get_field('terrase_tech_description');
+$gallery_title = get_field('terrase_gallery_title') ?: 'Farbvarianten & Galerie';
 $color_variants = get_field('terrase_color_variants');
 
 $block_id = isset($block['anchor']) ? $block['anchor'] : 'terrase-' . $block['id'];
@@ -95,7 +96,7 @@ if ($hero_image && isset($hero_image['url'])) {
     <?php if ($color_variants && is_array($color_variants) && count($color_variants) > 0): ?>
     <section class="terrase-gallery-section section-padding">
         <div class="container">
-            <h2 class="section-title">Farbvarianten & Galerie</h2>
+            <h2 class="section-title"><?php echo esc_html($gallery_title); ?></h2>
 
             <!-- COLOR BUTTONS -->
             <div class="color-buttons-row">
@@ -638,6 +639,31 @@ if ($hero_image && isset($hero_image['url'])) {
 
     .banner-title {
         font-size: 1.75rem;
+    }
+
+    /* Technical Section Mobile */
+    .specs-list {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .spec-row {
+        flex-direction: column;
+        gap: 4px;
+        padding: 10px 0;
+    }
+
+    .spec-row dt {
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    .spec-row dd {
+        font-size: 1rem;
+    }
+
+    .tech-description-text {
+        font-size: 1rem;
     }
 
     .terrase-gallery-grid {
