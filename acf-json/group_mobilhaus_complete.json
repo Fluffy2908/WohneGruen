@@ -183,16 +183,8 @@
                     "label": "PDF Button Text",
                     "name": "pdf_button_text",
                     "type": "text",
-                    "instructions": "Text der auf dem Download-Button angezeigt wird (z.B. 'Technisches Datenblatt herunterladen')",
+                    "instructions": "Text der auf dem Download-Button angezeigt wird (z.B. 'Technisches Datenblatt herunterladen'). Nur relevant wenn PDF-Datei hochgeladen wurde.",
                     "required": 0,
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_variant_pdf_download",
-                                "operator": "!=empty"
-                            }
-                        ]
-                    ],
                     "default_value": "PDF herunterladen",
                     "placeholder": "PDF herunterladen"
                 },
