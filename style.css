@@ -526,6 +526,9 @@ ul {
     display: none;
     align-items: center;
     gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 @media (min-width: 768px) {
@@ -534,16 +537,22 @@ ul {
     }
 }
 
-.nav-menu a {
+.nav-menu > li {
+    list-style: none;
+    position: relative;
+}
+
+.nav-menu > li > a {
     font-weight: 500;
     color: var(--color-muted-foreground);
     transition: var(--transition);
     position: relative;
     padding-bottom: 4px;
     text-decoration: none;
+    display: inline-block;
 }
 
-.nav-menu a::after {
+.nav-menu > li > a::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -554,40 +563,32 @@ ul {
     transition: width 0.3s ease;
 }
 
-.nav-menu a:hover {
+.nav-menu > li > a:hover {
     color: var(--color-primary);
 }
 
-.nav-menu a:hover::after {
+.nav-menu > li > a:hover::after {
     width: 100%;
 }
 
 /* Active page state */
-.nav-menu a.current-menu-item,
-.nav-menu a.current_page_item,
-.nav-menu a.current-menu-ancestor,
-.nav-menu a.active {
+.nav-menu > li.current-menu-item > a,
+.nav-menu > li.current_page_item > a,
+.nav-menu > li.current-menu-ancestor > a,
+.nav-menu > li.current-menu-parent > a {
     color: var(--color-primary);
     font-weight: 600;
 }
 
-.nav-menu a.current-menu-item::after,
-.nav-menu a.current_page_item::after,
-.nav-menu a.current-menu-ancestor::after,
-.nav-menu a.active::after {
+.nav-menu > li.current-menu-item > a::after,
+.nav-menu > li.current_page_item > a::after,
+.nav-menu > li.current-menu-ancestor > a::after,
+.nav-menu > li.current-menu-parent > a::after {
     width: 100%;
 }
 
 /* Dropdown Menu Styles */
-.nav-menu {
-    position: relative;
-}
-
-.nav-menu > a {
-    position: relative;
-}
-
-.nav-menu > a.has-dropdown {
+.nav-menu > li.menu-item-has-children > a {
     padding-right: 1.25rem;
 }
 
@@ -599,38 +600,33 @@ ul {
     font-size: 0.6rem;
     opacity: 0.6;
     transition: transform 0.3s ease;
+    pointer-events: none;
 }
 
 .sub-menu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 1rem);
     left: 0;
     min-width: 200px;
     background: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 0.5rem 0;
-    margin-top: 0.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 0.75rem 0;
+    margin: 0;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
     z-index: 100;
+    list-style: none;
 }
 
-.nav-menu > a.has-dropdown:hover + .sub-menu,
-.sub-menu:hover {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-/* Alternative: wrap in container div for better hover handling */
+/* Show submenu on parent hover */
 .nav-menu > .menu-item-has-children {
     position: relative;
 }
 
-.nav-menu > .menu-item-has-children:hover .sub-menu {
+.nav-menu > .menu-item-has-children:hover > .sub-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -642,6 +638,8 @@ ul {
 
 .sub-menu li {
     list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .sub-menu a {
@@ -653,6 +651,7 @@ ul {
     font-weight: 500;
     font-size: 0.9375rem;
     position: relative;
+    white-space: nowrap;
 }
 
 .sub-menu a::after {
@@ -678,15 +677,15 @@ ul {
 }
 
 /* Active submenu item - always show underline when dropdown is open */
-.sub-menu a.current-menu-item,
-.sub-menu a.current_page_item {
+.sub-menu li.current-menu-item > a,
+.sub-menu li.current_page_item > a {
     background: var(--color-background);
     color: var(--color-primary);
     font-weight: 600;
 }
 
-.sub-menu a.current-menu-item::after,
-.sub-menu a.current_page_item::after {
+.sub-menu li.current-menu-item > a::after,
+.sub-menu li.current_page_item > a::after {
     width: calc(100% - 2.5rem);
     transition: none; /* Instant appearance for active state */
 }

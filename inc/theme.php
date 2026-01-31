@@ -77,19 +77,12 @@ class wohnegruen_Nav_Walker extends Walker_Nav_Menu {
 
         $classes = empty($item->classes) ? array() : (array) $item->classes;
 
-        // Add 'menu-item-has-children' class if item has children
-        if (in_array('menu-item-has-children', $item->classes)) {
-            $classes[] = 'has-dropdown';
-        }
-
         // Add current item classes
         $class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args, $depth));
         $class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
 
-        // If depth > 0, wrap in li, otherwise just output the link
-        if ($depth > 0) {
-            $output .= $indent . '<li' . $class_names . '>';
-        }
+        // Wrap ALL menu items in li tags (top level and submenus)
+        $output .= $indent . '<li' . $class_names . '>';
 
         $atts = array();
         $atts['href'] = !empty($item->url) ? $item->url : '';
@@ -105,10 +98,10 @@ class wohnegruen_Nav_Walker extends Walker_Nav_Menu {
 
         $title = apply_filters('the_title', $item->title, $item->ID);
 
-        $item_output = '<a' . $attributes . ($depth === 0 ? $class_names : '') . '>';
+        $item_output = '<a' . $attributes . '>';
         $item_output .= $title;
 
-        // Add dropdown arrow if has children
+        // Add dropdown arrow if has children and at top level
         if (in_array('menu-item-has-children', $item->classes) && $depth === 0) {
             $item_output .= '<span class="dropdown-arrow">▼</span>';
         }
@@ -120,9 +113,7 @@ class wohnegruen_Nav_Walker extends Walker_Nav_Menu {
 
     // End menu item
     function end_el(&$output, $item, $depth = 0, $args = null) {
-        if ($depth > 0) {
-            $output .= "</li>\n";
-        }
+        $output .= "</li>\n";
     }
 }
 
