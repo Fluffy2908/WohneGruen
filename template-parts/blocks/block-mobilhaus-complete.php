@@ -1059,7 +1059,7 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
 @media (max-width: 767px) {
     .hero-headline {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     .banner-title {
@@ -1068,6 +1068,28 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
     .section-title {
         font-size: 2rem;
+    }
+
+    /* Interior schemes section - grayish background on mobile */
+    .interior-schemes-section .section-title,
+    .interior-schemes-section .section-subtitle {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 12px;
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .interior-schemes-section .section-title {
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+    }
+
+    .interior-schemes-section .section-subtitle {
+        margin-bottom: 40px;
+        padding-top: 0;
     }
 
     .interior-gallery {
@@ -1124,7 +1146,7 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
 @media (max-width: 479px) {
     .hero-headline {
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
 
     .interior-gallery {
