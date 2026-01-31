@@ -844,9 +844,16 @@ ul {
 }
 
 /* Mobile menu list items */
+.mobile-menu-items,
 .mobile-menu-items > li {
     list-style: none;
     width: 100%;
+}
+
+.mobile-menu-items ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 /* Active page state in mobile menu - target li elements */
@@ -880,15 +887,25 @@ ul {
     max-width: 300px;
 }
 
+/* Hide desktop dropdown arrow in mobile menu */
+.mobile-menu-items .dropdown-arrow.desktop-only {
+    display: none;
+}
+
 .mobile-menu-items .submenu-toggle {
     background: none;
     border: none;
     color: var(--color-primary);
     cursor: pointer;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
+    padding: 1rem;
+    font-size: 1.5rem;
     transition: transform 0.3s ease;
     flex-shrink: 0;
+    min-width: 48px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .mobile-menu-items .submenu-open .submenu-toggle {

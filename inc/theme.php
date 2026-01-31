@@ -36,25 +36,33 @@ function wohnegruen_setup() {
 add_action('after_setup_theme', 'wohnegruen_setup');
 
 /**
- * Disable wpautop completely to prevent unwanted <p> tags around blocks
+ * Disable ALL automatic paragraph formatting
  */
 remove_filter('the_content', 'wpautop');
 remove_filter('the_excerpt', 'wpautop');
+remove_filter('widget_text_content', 'wpautop');
+remove_filter('term_description', 'wpautop');
 
 /**
- * Remove all block wrappers from Gutenberg blocks
+ * Aggressive removal of <p> tags from page content
  */
-add_filter('render_block', function($block_content, $block) {
-    // Only process for pages
+add_filter('the_content', function($content) {
     if (!is_page()) {
-        return $block_content;
+        return $content;
     }
 
-    // Remove any wrapping <p> tags around block divs
-    $block_content = preg_replace('/<p>\s*(<div[^>]*>.*<\/div>)\s*<\/p>/s', '$1', $block_content);
+    // Remove empty <p> tags
+    $content = preg_replace('/<p>\s*<\/p>/i', '', $content);
 
-    return $block_content;
-}, 10, 2);
+    // Remove <p> tags that only contain whitespace
+    $content = preg_replace('/<p>\s+<\/p>/i', '', $content);
+
+    // Remove <p> tags wrapping block-level elements
+    $content = preg_replace('/<p>\s*(<div[^>]*>)/i', '$1', $content);
+    $content = preg_replace('/(<\/div>)\s*<\/p>/i', '$1', $content);
+
+    return $content;
+}, 999);
 
 /**
  * Register Custom Block Category for ACF Blocks
@@ -122,9 +130,10 @@ class wohnegruen_Nav_Walker extends Walker_Nav_Menu {
         $item_output = '<a' . $attributes . '>';
         $item_output .= $title;
 
-        // Add dropdown arrow if has children and at top level
+        // Add dropdown arrow ONLY for desktop navigation (not mobile)
+        // Mobile uses JavaScript toggle button instead
         if (in_array('menu-item-has-children', $item->classes) && $depth === 0) {
-            $item_output .= '<span class="dropdown-arrow">▼</span>';
+            $item_output .= '<span class="dropdown-arrow desktop-only">▼</span>';
         }
 
         $item_output .= '</a>';
