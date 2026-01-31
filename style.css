@@ -596,12 +596,15 @@ ul {
     width: 100%;
 }
 
-/* Dropdown Menu Styles */
+/* Dropdown Menu Styles - Desktop only */
 .nav-menu > li.menu-item-has-children > a {
     padding-right: 1.25rem;
+    position: relative;
 }
 
-.dropdown-arrow {
+/* Add dropdown arrow via CSS for desktop navigation only */
+.nav-menu > li.menu-item-has-children > a::after {
+    content: '▼';
     position: absolute;
     right: 0;
     top: 50%;
@@ -610,6 +613,10 @@ ul {
     opacity: 0.6;
     transition: transform 0.3s ease;
     pointer-events: none;
+}
+
+.nav-menu > li.menu-item-has-children:hover > a::after {
+    transform: translateY(-50%) rotate(180deg);
 }
 
 /* Desktop submenu (only applies to desktop nav) */
@@ -642,9 +649,6 @@ ul {
     transform: translateY(0);
 }
 
-.nav-menu > .menu-item-has-children:hover .dropdown-arrow {
-    transform: translateY(-50%) rotate(180deg);
-}
 
 .nav-menu .sub-menu li {
     list-style: none;
@@ -885,11 +889,6 @@ ul {
     justify-content: space-between;
     width: 100%;
     max-width: 300px;
-}
-
-/* Hide desktop dropdown arrow in mobile menu */
-.mobile-menu-items .dropdown-arrow.desktop-only {
-    display: none;
 }
 
 .mobile-menu-items .submenu-toggle {

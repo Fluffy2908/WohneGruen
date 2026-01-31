@@ -218,7 +218,7 @@ $contact_phone = wohnegruen_get_option('contact_phone');
                 'theme_location' => 'primary',
                 'container' => false,
                 'items_wrap' => '%3$s',
-                'walker' => new wohnegruen_Nav_Walker(),
+                'walker' => new wohnegruen_Mobile_Nav_Walker(),
             ));
         endif; ?>
     </div>

@@ -85,7 +85,7 @@ function wohnegruen_register_block_category($categories) {
 add_filter('block_categories_all', 'wohnegruen_register_block_category', 10, 1);
 
 /**
- * Custom Menu Walker for Navigation with Submenu Support
+ * Custom Menu Walker for Desktop Navigation with Submenu Support
  */
 class wohnegruen_Nav_Walker extends Walker_Nav_Menu {
     // Start level wrapper (ul)
@@ -130,12 +130,64 @@ class wohnegruen_Nav_Walker extends Walker_Nav_Menu {
         $item_output = '<a' . $attributes . '>';
         $item_output .= $title;
 
-        // Add dropdown arrow ONLY for desktop navigation (not mobile)
+        // Don't add arrow here - desktop arrow is added via CSS ::after
         // Mobile uses JavaScript toggle button instead
-        if (in_array('menu-item-has-children', $item->classes) && $depth === 0) {
-            $item_output .= '<span class="dropdown-arrow desktop-only">▼</span>';
+
+        $item_output .= '</a>';
+
+        $output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
+    }
+
+    // End menu item
+    function end_el(&$output, $item, $depth = 0, $args = null) {
+        $output .= "</li>\n";
+    }
+}
+
+/**
+ * Custom Menu Walker for Mobile Navigation (Simplified - No Arrows)
+ * Arrows are added via JavaScript toggle button for mobile
+ */
+class wohnegruen_Mobile_Nav_Walker extends Walker_Nav_Menu {
+    // Start level wrapper (ul)
+    function start_lvl(&$output, $depth = 0, $args = null) {
+        $indent = str_repeat("\t", $depth);
+        $output .= "\n$indent<ul class=\"sub-menu\">\n";
+    }
+
+    // End level wrapper
+    function end_lvl(&$output, $depth = 0, $args = null) {
+        $indent = str_repeat("\t", $depth);
+        $output .= "$indent</ul>\n";
+    }
+
+    // Start menu item
+    function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
+        $indent = ($depth) ? str_repeat("\t", $depth) : '';
+
+        $classes = empty($item->classes) ? array() : (array) $item->classes;
+        $class_names = join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args, $depth));
+        $class_names = $class_names ? ' class="' . esc_attr($class_names) . '"' : '';
+
+        $output .= $indent . '<li' . $class_names . '>';
+
+        $atts = array();
+        $atts['href'] = !empty($item->url) ? $item->url : '';
+        $atts = apply_filters('nav_menu_link_attributes', $atts, $item, $args, $depth);
+
+        $attributes = '';
+        foreach ($atts as $attr => $value) {
+            if (!empty($value)) {
+                $value = ('href' === $attr) ? esc_url($value) : esc_attr($value);
+                $attributes .= ' ' . $attr . '="' . $value . '"';
+            }
         }
 
+        $title = apply_filters('the_title', $item->title, $item->ID);
+
+        // Mobile version - no arrows in HTML (JavaScript adds toggle button)
+        $item_output = '<a' . $attributes . '>';
+        $item_output .= $title;
         $item_output .= '</a>';
 
         $output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
