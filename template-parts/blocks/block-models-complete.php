@@ -17,7 +17,6 @@ $pure_model = get_field('models_pure_model');
 
 $block_id = 'models-complete-' . $block['id'];
 ?>
-
 <div class="models-complete-page" id="<?php echo esc_attr($block_id); ?>">
 
     <!-- Hero Section -->

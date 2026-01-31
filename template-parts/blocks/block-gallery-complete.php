@@ -11,7 +11,6 @@ $categories = get_field('gallery_categories');
 
 $block_id = 'gallery-' . $block['id'];
 ?>
-
 <div class="gallery-complete-page" id="<?php echo esc_attr($block_id); ?>">
 
     <!-- Hero Section with Background Image -->
