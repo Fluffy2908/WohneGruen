@@ -63,7 +63,7 @@ $block_id = 'terrase-overview-' . $block['id'];
                 <?php if ($nature_terrase):
                     $nature_title = get_the_title($nature_terrase->ID);
                     $nature_subtitle = get_field('terrase_hero_subtitle', $nature_terrase->ID);
-                    $nature_sizes = get_field('terrase_size_variants', $nature_terrase->ID);
+                    $nature_colors = get_field('terrase_color_variants', $nature_terrase->ID);
                     $nature_link = get_permalink($nature_terrase->ID);
                     $nature_image = '';
 
@@ -73,6 +73,13 @@ $block_id = 'terrase-overview-' . $block['id'];
                         $nature_image = $hero_img['url'];
                     } elseif (has_post_thumbnail($nature_terrase->ID)) {
                         $nature_image = get_the_post_thumbnail_url($nature_terrase->ID, 'large');
+                    }
+
+                    // Count color options and orientations
+                    $color_count = is_array($nature_colors) ? count($nature_colors) : 0;
+                    $orientation_count = 0;
+                    if ($nature_colors && is_array($nature_colors) && isset($nature_colors[0]['nature_orientations'])) {
+                        $orientation_count = count($nature_colors[0]['nature_orientations']);
                     }
                 ?>
                 <div class="calling-card">
@@ -93,19 +100,16 @@ $block_id = 'terrase-overview-' . $block['id'];
                         <?php endif; ?>
 
                         <!-- Quick Specs -->
-                        <?php if ($nature_sizes && is_array($nature_sizes) && count($nature_sizes) > 0): ?>
+                        <?php if ($color_count > 0): ?>
                             <div class="card-specs">
                                 <div class="spec-item">
-                                    <span class="spec-label">Verfügbare Größen:</span>
-                                    <span class="spec-value"><?php echo count($nature_sizes); ?> Varianten</span>
+                                    <span class="spec-label">Farbvarianten:</span>
+                                    <span class="spec-value"><?php echo $color_count; ?> Farben</span>
                                 </div>
-                                <?php
-                                // Show first size variant
-                                if (isset($nature_sizes[0]['variant_name'])):
-                                ?>
+                                <?php if ($orientation_count > 0): ?>
                                     <div class="spec-item">
-                                        <span class="spec-label">Ab:</span>
-                                        <span class="spec-value"><?php echo esc_html($nature_sizes[0]['variant_name']); ?></span>
+                                        <span class="spec-label">Ausrichtungen:</span>
+                                        <span class="spec-value"><?php echo $orientation_count; ?> Optionen</span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -123,7 +127,7 @@ $block_id = 'terrase-overview-' . $block['id'];
                 <?php if ($pure_terrase):
                     $pure_title = get_the_title($pure_terrase->ID);
                     $pure_subtitle = get_field('terrase_hero_subtitle', $pure_terrase->ID);
-                    $pure_sizes = get_field('terrase_size_variants', $pure_terrase->ID);
+                    $pure_colors = get_field('terrase_color_variants', $pure_terrase->ID);
                     $pure_link = get_permalink($pure_terrase->ID);
                     $pure_image = '';
 
@@ -133,6 +137,13 @@ $block_id = 'terrase-overview-' . $block['id'];
                         $pure_image = $hero_img['url'];
                     } elseif (has_post_thumbnail($pure_terrase->ID)) {
                         $pure_image = get_the_post_thumbnail_url($pure_terrase->ID, 'large');
+                    }
+
+                    // Count color options and sizes
+                    $color_count = is_array($pure_colors) ? count($pure_colors) : 0;
+                    $size_count = 0;
+                    if ($pure_colors && is_array($pure_colors) && isset($pure_colors[0]['pure_sizes'])) {
+                        $size_count = count($pure_colors[0]['pure_sizes']);
                     }
                 ?>
                 <div class="calling-card">
@@ -153,19 +164,16 @@ $block_id = 'terrase-overview-' . $block['id'];
                         <?php endif; ?>
 
                         <!-- Quick Specs -->
-                        <?php if ($pure_sizes && is_array($pure_sizes) && count($pure_sizes) > 0): ?>
+                        <?php if ($color_count > 0): ?>
                             <div class="card-specs">
                                 <div class="spec-item">
-                                    <span class="spec-label">Verfügbare Größen:</span>
-                                    <span class="spec-value"><?php echo count($pure_sizes); ?> Varianten</span>
+                                    <span class="spec-label">Farbvarianten:</span>
+                                    <span class="spec-value"><?php echo $color_count; ?> Farben</span>
                                 </div>
-                                <?php
-                                // Show first size variant
-                                if (isset($pure_sizes[0]['variant_name'])):
-                                ?>
+                                <?php if ($size_count > 0): ?>
                                     <div class="spec-item">
-                                        <span class="spec-label">Ab:</span>
-                                        <span class="spec-value"><?php echo esc_html($pure_sizes[0]['variant_name']); ?></span>
+                                        <span class="spec-label">Größenvarianten:</span>
+                                        <span class="spec-value"><?php echo $size_count; ?> Größen</span>
                                     </div>
                                 <?php endif; ?>
                             </div>
