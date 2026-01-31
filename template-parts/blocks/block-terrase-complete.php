@@ -459,8 +459,8 @@ if ($hero_image && isset($hero_image['url'])) {
 
 .terrase-size-btn {
     padding: 12px 24px;
-    background: var(--color-background);
-    border: 2px solid var(--color-background);
+    background: white;
+    border: 2px solid #e5e7eb;
     color: var(--color-text-secondary);
     font-weight: 600;
     font-size: 1rem;
@@ -471,10 +471,11 @@ if ($hero_image && isset($hero_image['url'])) {
 
 .terrase-size-btn:hover {
     border-color: var(--color-primary);
+    color: var(--color-primary);
 }
 
 .terrase-size-btn.active {
-    background: var(--color-primary);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     border-color: var(--color-primary);
     color: white;
 }
