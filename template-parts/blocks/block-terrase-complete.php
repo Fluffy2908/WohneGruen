@@ -704,15 +704,15 @@ if ($hero_image && isset($hero_image['url'])) {
 
 <script>
 // Global data storage
-let terraseData_<?php echo esc_js($block_id); ?> = <?php echo json_encode($color_variants ?: []); ?>;
-let terraseType_<?php echo esc_js($block_id); ?> = '<?php echo esc_js($terrase_type); ?>';
-let currentColorIndex_<?php echo esc_js($block_id); ?> = 0;
-let currentSizeIndex_<?php echo esc_js($block_id); ?> = 0;
-let currentOrientationIndex_<?php echo esc_js($block_id); ?> = 0;
-let currentImageIndex_<?php echo esc_js($block_id); ?> = 0;
+window.terraseData_<?php echo esc_js($block_id); ?> = <?php echo json_encode($color_variants ?: []); ?>;
+window.terraseType_<?php echo esc_js($block_id); ?> = '<?php echo esc_js($terrase_type); ?>';
+window.currentColorIndex_<?php echo esc_js($block_id); ?> = 0;
+window.currentSizeIndex_<?php echo esc_js($block_id); ?> = 0;
+window.currentOrientationIndex_<?php echo esc_js($block_id); ?> = 0;
+window.currentImageIndex_<?php echo esc_js($block_id); ?> = 0;
 
-// Switch Color
-function switchTerraseColor(colorIndex, blockId) {
+// Switch Color - EXPLICITLY GLOBAL
+window.switchTerraseColor = function(colorIndex, blockId) {
     const block = document.getElementById(blockId);
     if (!block) return;
 
@@ -729,10 +729,10 @@ function switchTerraseColor(colorIndex, blockId) {
     });
 
     window['currentColorIndex_' + blockId] = colorIndex;
-}
+};
 
-// Switch Orientation (Nature)
-function switchOrientation(colorIndex, orientationIndex, blockId) {
+// Switch Orientation (Nature) - EXPLICITLY GLOBAL
+window.switchOrientation = function(colorIndex, orientationIndex, blockId) {
     const colorContent = document.getElementById(`color-content-${blockId}-${colorIndex}`);
     if (!colorContent) return;
 
@@ -749,10 +749,10 @@ function switchOrientation(colorIndex, orientationIndex, blockId) {
     });
 
     window['currentOrientationIndex_' + blockId] = orientationIndex;
-}
+};
 
-// Switch Size (Pure)
-function switchSize(colorIndex, sizeIndex, blockId) {
+// Switch Size (Pure) - EXPLICITLY GLOBAL
+window.switchSize = function(colorIndex, sizeIndex, blockId) {
     const colorContent = document.getElementById(`color-content-${blockId}-${colorIndex}`);
     if (!colorContent) return;
 
@@ -769,10 +769,10 @@ function switchSize(colorIndex, sizeIndex, blockId) {
     });
 
     window['currentSizeIndex_' + blockId] = sizeIndex;
-}
+};
 
-// Switch Orientation (Pure)
-function switchPureOrientation(colorIndex, sizeIndex, orientationIndex, blockId) {
+// Switch Orientation (Pure) - EXPLICITLY GLOBAL
+window.switchPureOrientation = function(colorIndex, sizeIndex, orientationIndex, blockId) {
     const sizeContent = document.getElementById(`size-content-${blockId}-${colorIndex}-${sizeIndex}`);
     if (!sizeContent) return;
 
@@ -789,10 +789,10 @@ function switchPureOrientation(colorIndex, sizeIndex, orientationIndex, blockId)
     });
 
     window['currentOrientationIndex_' + blockId] = orientationIndex;
-}
+};
 
-// Open Lightbox (Nature)
-function openTerraseLightbox(colorIndex, orientationIndex, imageIndex, blockId) {
+// Open Lightbox (Nature) - EXPLICITLY GLOBAL
+window.openTerraseLightbox = function(colorIndex, orientationIndex, imageIndex, blockId) {
     const data = window['terraseData_' + blockId];
     if (!data || !data[colorIndex]) return;
 
@@ -810,10 +810,10 @@ function openTerraseLightbox(colorIndex, orientationIndex, imageIndex, blockId) 
     document.getElementById('lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${orientation.gallery.length}`;
     document.getElementById('lightbox-' + blockId).classList.add('active');
     document.body.style.overflow = 'hidden';
-}
+};
 
-// Open Lightbox (Pure)
-function openPureLightbox(colorIndex, sizeIndex, orientationIndex, imageIndex, blockId) {
+// Open Lightbox (Pure) - EXPLICITLY GLOBAL
+window.openPureLightbox = function(colorIndex, sizeIndex, orientationIndex, imageIndex, blockId) {
     const data = window['terraseData_' + blockId];
     if (!data || !data[colorIndex]) return;
 
@@ -835,16 +835,16 @@ function openPureLightbox(colorIndex, sizeIndex, orientationIndex, imageIndex, b
     document.getElementById('lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${orientation.gallery.length}`;
     document.getElementById('lightbox-' + blockId).classList.add('active');
     document.body.style.overflow = 'hidden';
-}
+};
 
-// Close Lightbox
-function closeTerraseLightbox(blockId) {
+// Close Lightbox - EXPLICITLY GLOBAL
+window.closeTerraseLightbox = function(blockId) {
     document.getElementById('lightbox-' + blockId).classList.remove('active');
     document.body.style.overflow = 'auto';
-}
+};
 
-// Navigate Lightbox
-function navigateTerraseLightbox(direction, blockId) {
+// Navigate Lightbox - EXPLICITLY GLOBAL
+window.navigateTerraseLightbox = function(direction, blockId) {
     const data = window['terraseData_' + blockId];
     const terraseType = window['terraseType_' + blockId];
     const colorIndex = window['currentColorIndex_' + blockId];
@@ -872,15 +872,15 @@ function navigateTerraseLightbox(direction, blockId) {
 
     document.getElementById('lightbox-img-' + blockId).src = gallery[imageIndex].url;
     document.getElementById('lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${gallery.length}`;
-}
+};
 
 // Keyboard navigation
 document.addEventListener('keydown', function(e) {
     const lightbox = document.getElementById('lightbox-<?php echo esc_js($block_id); ?>');
     if (lightbox && lightbox.classList.contains('active')) {
-        if (e.key === 'Escape') closeTerraseLightbox('<?php echo esc_js($block_id); ?>');
-        if (e.key === 'ArrowLeft') navigateTerraseLightbox(-1, '<?php echo esc_js($block_id); ?>');
-        if (e.key === 'ArrowRight') navigateTerraseLightbox(1, '<?php echo esc_js($block_id); ?>');
+        if (e.key === 'Escape') window.closeTerraseLightbox('<?php echo esc_js($block_id); ?>');
+        if (e.key === 'ArrowLeft') window.navigateTerraseLightbox(-1, '<?php echo esc_js($block_id); ?>');
+        if (e.key === 'ArrowRight') window.navigateTerraseLightbox(1, '<?php echo esc_js($block_id); ?>');
     }
 });
 </script>
