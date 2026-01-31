@@ -56,7 +56,6 @@ $block_id = 'models-complete-' . $block['id'];
     <?php if ($nature_model || $pure_model): ?>
     <section class="models-cards-section section-padding">
         <div class="container">
-            <h2 class="section-title">Unsere Modelle</h2>
 
             <div class="calling-cards-grid">
 
@@ -286,6 +285,7 @@ $block_id = 'models-complete-' . $block['id'];
 /* Calling Cards Section */
 .models-cards-section {
     background: #ffffff;
+    padding-top: 40px;
 }
 
 .calling-cards-grid {
