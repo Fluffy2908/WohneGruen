@@ -3,21 +3,17 @@
  * Block: Models Complete (Modelle page with calling cards)
  * Shows Nature and Pure as preview cards that link to individual pages
  */
-
 // Get all fields
 $hero_title = get_field('models_hero_title');
 $hero_subtitle = get_field('models_hero_subtitle');
 $hero_image = get_field('models_hero_image');
 $intro_title = get_field('models_intro_title');
 $intro_content = get_field('models_intro_content');
-
 // Nature and Pure model selection
 $nature_model = get_field('models_nature_model');
 $pure_model = get_field('models_pure_model');
-
 $block_id = 'models-complete-' . $block['id'];
-?>
-<div class="models-complete-page" id="<?php echo esc_attr($block_id); ?>">
+?><div class="models-complete-page" id="<?php echo esc_attr($block_id); ?>">
 
     <!-- Hero Section -->
     <section class="models-hero" <?php if ($hero_image): ?>style="background-image: url('<?php echo esc_url($hero_image['url']); ?>');"<?php endif; ?>>

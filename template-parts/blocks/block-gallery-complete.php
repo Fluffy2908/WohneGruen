@@ -3,15 +3,12 @@
  * Block: Gallery Complete (All-in-One for Galerie page)
  * Hero + Toggle Buttons (Bilder / 3D Grundrisse) + Gallery Grid + Slider + 3D Floor Plans
  */
-
 $hero_title = get_field('gallery_hero_title');
 $hero_image = get_field('gallery_hero_image');
 $show_filters = get_field('gallery_show_filters');
 $categories = get_field('gallery_categories');
-
 $block_id = 'gallery-' . $block['id'];
-?>
-<div class="gallery-complete-page" id="<?php echo esc_attr($block_id); ?>">
+?><div class="gallery-complete-page" id="<?php echo esc_attr($block_id); ?>">
 
     <!-- Hero Section with Background Image -->
     <section class="gallery-hero" style="<?php if ($hero_image): ?>background-image: url('<?php echo esc_url($hero_image['url']); ?>');<?php endif; ?>">
