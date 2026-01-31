@@ -179,6 +179,24 @@
                     "mime_types": "pdf"
                 },
                 {
+                    "key": "field_variant_pdf_button_text",
+                    "label": "PDF Button Text",
+                    "name": "pdf_button_text",
+                    "type": "text",
+                    "instructions": "Text der auf dem Download-Button angezeigt wird (z.B. 'Technisches Datenblatt herunterladen')",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_variant_pdf_download",
+                                "operator": "!=empty"
+                            }
+                        ]
+                    ],
+                    "default_value": "PDF herunterladen",
+                    "placeholder": "PDF herunterladen"
+                },
+                {
                     "key": "field_variant_floor_plans",
                     "label": "Grundrisse",
                     "name": "floor_plans",

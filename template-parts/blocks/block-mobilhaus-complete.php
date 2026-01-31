@@ -186,7 +186,9 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
                 </div>
 
                 <!-- PDF Download Button -->
-                <?php if (!empty($variant['pdf_download'])): ?>
+                <?php if (!empty($variant['pdf_download'])):
+                    $pdf_button_text = !empty($variant['pdf_button_text']) ? $variant['pdf_button_text'] : 'PDF herunterladen';
+                ?>
                 <div class="variant-pdf-download">
                     <a href="<?php echo esc_url($variant['pdf_download']['url']); ?>"
                        class="pdf-download-btn"
@@ -197,7 +199,7 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
                             <polyline points="7 10 12 15 17 10"></polyline>
                             <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
-                        <p></p>
+                        <p><?php echo esc_html($pdf_button_text); ?></p>
                     </a>
                 </div>
                 <?php endif; ?>
