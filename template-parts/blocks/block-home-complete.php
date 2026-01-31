@@ -544,6 +544,7 @@ $block_id = 'home-complete-' . $block['id'];
 
     .about-image-wrapper {
         order: 2;
+        overflow: visible;
     }
 
     .about-content {
@@ -551,18 +552,22 @@ $block_id = 'home-complete-' . $block['id'];
     }
 
     .about-badge {
-        bottom: 12px;
-        right: 12px;
-        padding: 10px 16px;
-        min-width: 100px;
+        bottom: 16px;
+        right: 16px;
+        padding: 14px 20px;
+        min-width: 120px;
+        display: block;
+        visibility: visible;
+        opacity: 1;
+        z-index: 10;
     }
 
     .badge-number {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
     }
 
     .badge-text {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
     }
 
     .about-content h2 {
