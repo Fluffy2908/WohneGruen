@@ -687,19 +687,19 @@ let currentImageIndex_<?php echo esc_js($block_id); ?> = 0;
 
 // Switch Color
 function switchTerraseColor(colorIndex, blockId) {
-    const colorContents = document.querySelectorAll(`[id^="color-content-${blockId}-"]`);
-    const colorBtns = document.querySelectorAll(`[data-color-index]`);
+    const block = document.getElementById(blockId);
+    if (!block) return;
+
+    const colorContents = block.querySelectorAll(`[id^="color-content-${blockId}-"]`);
+    const colorBtns = block.querySelectorAll('.terrase-color-btn');
+
+    colorBtns.forEach(btn => btn.classList.remove('active'));
+    if (colorBtns[colorIndex]) {
+        colorBtns[colorIndex].classList.add('active');
+    }
 
     colorContents.forEach((content, i) => {
         content.style.display = i === colorIndex ? 'block' : 'none';
-    });
-
-    colorBtns.forEach((btn, i) => {
-        if (i === colorIndex) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
     });
 
     window['currentColorIndex_' + blockId] = colorIndex;
@@ -707,19 +707,19 @@ function switchTerraseColor(colorIndex, blockId) {
 
 // Switch Orientation (Nature)
 function switchOrientation(colorIndex, orientationIndex, blockId) {
-    const orientationContents = document.querySelectorAll(`[id^="orientation-${blockId}-${colorIndex}-"]`);
-    const orientationBtns = document.querySelectorAll(`#color-content-${blockId}-${colorIndex} .terrase-orientation-btn`);
+    const colorContent = document.getElementById(`color-content-${blockId}-${colorIndex}`);
+    if (!colorContent) return;
+
+    const orientationContents = colorContent.querySelectorAll(`[id^="orientation-${blockId}-${colorIndex}-"]`);
+    const orientationBtns = colorContent.querySelectorAll('.terrase-orientation-btn');
+
+    orientationBtns.forEach(btn => btn.classList.remove('active'));
+    if (orientationBtns[orientationIndex]) {
+        orientationBtns[orientationIndex].classList.add('active');
+    }
 
     orientationContents.forEach((content, i) => {
         content.style.display = i === orientationIndex ? 'block' : 'none';
-    });
-
-    orientationBtns.forEach((btn, i) => {
-        if (i === orientationIndex) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
     });
 
     window['currentOrientationIndex_' + blockId] = orientationIndex;
@@ -727,19 +727,19 @@ function switchOrientation(colorIndex, orientationIndex, blockId) {
 
 // Switch Size (Pure)
 function switchSize(colorIndex, sizeIndex, blockId) {
-    const sizeContents = document.querySelectorAll(`[id^="size-content-${blockId}-${colorIndex}-"]`);
-    const sizeBtns = document.querySelectorAll(`#color-content-${blockId}-${colorIndex} .terrase-size-btn`);
+    const colorContent = document.getElementById(`color-content-${blockId}-${colorIndex}`);
+    if (!colorContent) return;
+
+    const sizeContents = colorContent.querySelectorAll(`[id^="size-content-${blockId}-${colorIndex}-"]`);
+    const sizeBtns = colorContent.querySelectorAll('.terrase-size-btn');
+
+    sizeBtns.forEach(btn => btn.classList.remove('active'));
+    if (sizeBtns[sizeIndex]) {
+        sizeBtns[sizeIndex].classList.add('active');
+    }
 
     sizeContents.forEach((content, i) => {
         content.style.display = i === sizeIndex ? 'block' : 'none';
-    });
-
-    sizeBtns.forEach((btn, i) => {
-        if (i === sizeIndex) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
     });
 
     window['currentSizeIndex_' + blockId] = sizeIndex;
@@ -747,19 +747,19 @@ function switchSize(colorIndex, sizeIndex, blockId) {
 
 // Switch Orientation (Pure)
 function switchPureOrientation(colorIndex, sizeIndex, orientationIndex, blockId) {
-    const orientationContents = document.querySelectorAll(`[id^="pure-orientation-${blockId}-${colorIndex}-${sizeIndex}-"]`);
-    const orientationBtns = document.querySelectorAll(`#size-content-${blockId}-${colorIndex}-${sizeIndex} .terrase-orientation-btn`);
+    const sizeContent = document.getElementById(`size-content-${blockId}-${colorIndex}-${sizeIndex}`);
+    if (!sizeContent) return;
+
+    const orientationContents = sizeContent.querySelectorAll(`[id^="pure-orientation-${blockId}-${colorIndex}-${sizeIndex}-"]`);
+    const orientationBtns = sizeContent.querySelectorAll('.terrase-orientation-btn');
+
+    orientationBtns.forEach(btn => btn.classList.remove('active'));
+    if (orientationBtns[orientationIndex]) {
+        orientationBtns[orientationIndex].classList.add('active');
+    }
 
     orientationContents.forEach((content, i) => {
         content.style.display = i === orientationIndex ? 'block' : 'none';
-    });
-
-    orientationBtns.forEach((btn, i) => {
-        if (i === orientationIndex) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
     });
 
     window['currentOrientationIndex_' + blockId] = orientationIndex;
