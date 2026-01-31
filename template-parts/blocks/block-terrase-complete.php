@@ -1,18 +1,19 @@
 <?php
 /**
  * Block: Complete Terrase Presentation
- * Professional design for terrace detail pages
+ * Interactive design with Color → Orientation/Size → Gallery system
  */
 
 // Get all field data
+$terrase_type = get_field('terrase_type');
 $hero_title = get_field('terrase_hero_title') ?: get_the_title();
 $hero_subtitle = get_field('terrase_hero_subtitle');
 $hero_image = get_field('terrase_hero_image');
 $description_title = get_field('terrase_description_title');
 $description_text = get_field('terrase_description_text');
-$size_variants = get_field('terrase_size_variants');
-$style_schemes = get_field('terrase_style_schemes');
-$features = get_field('terrase_features');
+$tech_specs = get_field('terrase_tech_specs');
+$tech_description = get_field('terrase_tech_description');
+$color_variants = get_field('terrase_color_variants');
 
 $block_id = isset($block['anchor']) ? $block['anchor'] : 'terrase-' . $block['id'];
 
@@ -27,7 +28,7 @@ if ($hero_image && isset($hero_image['url'])) {
 
 <article class="terrase-complete-page" id="<?php echo esc_attr($block_id); ?>">
 
-    <!-- HERO SECTION: Background Image + Green Filter + Centered Headline -->
+    <!-- HERO SECTION -->
     <section class="terrase-hero-new" style="background-image: url('<?php echo esc_url($hero_bg_image); ?>');">
         <div class="container">
             <div class="hero-content-center">
@@ -41,7 +42,7 @@ if ($hero_image && isset($hero_image['url'])) {
         </div>
     </section>
 
-    <!-- DESCRIPTION BANNER: Full Width with Text -->
+    <!-- DESCRIPTION BANNER -->
     <?php if ($description_title || $description_text): ?>
     <section class="description-banner section-padding">
         <div class="container">
@@ -57,148 +58,191 @@ if ($hero_image && isset($hero_image['url'])) {
     </section>
     <?php endif; ?>
 
-    <!-- FEATURES SECTION (if available) -->
-    <?php if ($features && is_array($features) && count($features) > 0): ?>
-    <section class="features-section section-padding">
+    <!-- TECHNICAL DATA SECTION -->
+    <?php if ($tech_specs || $tech_description): ?>
+    <section class="technical-section section-padding">
         <div class="container">
-            <h2 class="section-title">Besondere Merkmale</h2>
-            <div class="features-grid">
-                <?php foreach ($features as $feature): ?>
-                    <div class="feature-card">
-                        <?php if (!empty($feature['icon'])): ?>
-                            <span class="dashicons <?php echo esc_attr($feature['icon']); ?>"></span>
-                        <?php endif; ?>
-                        <h3><?php echo esc_html($feature['title']); ?></h3>
-                        <?php if (!empty($feature['description'])): ?>
-                            <p><?php echo esc_html($feature['description']); ?></p>
-                        <?php endif; ?>
+            <h2 class="section-title">Technische Daten</h2>
+            <div class="tech-grid">
+                <!-- Left: Specifications -->
+                <?php if ($tech_specs && is_array($tech_specs)): ?>
+                <div class="tech-specs-column">
+                    <dl class="specs-list">
+                        <?php foreach ($tech_specs as $spec): ?>
+                            <div class="spec-row">
+                                <dt><?php echo esc_html($spec['label']); ?></dt>
+                                <dd><?php echo esc_html($spec['value']); ?></dd>
+                            </div>
+                        <?php endforeach; ?>
+                    </dl>
+                </div>
+                <?php endif; ?>
+
+                <!-- Right: Description -->
+                <?php if ($tech_description): ?>
+                <div class="tech-description-column">
+                    <div class="tech-description-text">
+                        <?php echo wp_kses_post($tech_description); ?>
                     </div>
-                <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </section>
     <?php endif; ?>
 
-    <!-- SIZE VARIANTS SECTION: Tabbed Design with Specs + Images -->
-    <?php if ($size_variants && is_array($size_variants) && count($size_variants) > 0): ?>
-    <section class="size-variants-section section-padding">
+    <!-- COLOR & GALLERY SECTION -->
+    <?php if ($color_variants && is_array($color_variants) && count($color_variants) > 0): ?>
+    <section class="terrase-gallery-section section-padding">
         <div class="container">
-            <h2 class="section-title">Größenvarianten & Technische Daten</h2>
+            <h2 class="section-title">Farbvarianten & Galerie</h2>
 
-            <!-- Size Variant Tabs -->
-            <?php if (count($size_variants) > 1): ?>
-            <div class="size-variant-tabs">
-                <?php foreach ($size_variants as $index => $variant): ?>
+            <!-- COLOR BUTTONS -->
+            <div class="color-buttons-row">
+                <?php foreach ($color_variants as $color_index => $color): ?>
                     <button
-                        class="size-variant-tab <?php echo $index === 0 ? 'active' : ''; ?>"
-                        onclick="switchSizeVariant(<?php echo $index; ?>, '<?php echo esc_js($block_id); ?>')">
-                        <?php echo esc_html($variant['variant_name']); ?>
+                        class="terrase-color-btn <?php echo $color_index === 0 ? 'active' : ''; ?>"
+                        data-color-index="<?php echo $color_index; ?>"
+                        onclick="switchTerraseColor(<?php echo $color_index; ?>, '<?php echo esc_js($block_id); ?>')">
+                        <span class="color-btn-text"><?php echo esc_html($color['color_name']); ?></span>
                     </button>
                 <?php endforeach; ?>
             </div>
-            <?php endif; ?>
 
-            <!-- Size Variant Content -->
-            <?php foreach ($size_variants as $var_index => $variant): ?>
-            <div class="size-variant-content"
-                 id="variant-<?php echo esc_attr($block_id); ?>-<?php echo $var_index; ?>"
-                 style="<?php echo $var_index === 0 ? '' : 'display: none;'; ?>">
+            <!-- COLOR CONTENT AREAS -->
+            <?php foreach ($color_variants as $color_index => $color): ?>
+            <div class="terrase-color-content"
+                 id="color-content-<?php echo esc_attr($block_id); ?>-<?php echo $color_index; ?>"
+                 style="<?php echo $color_index === 0 ? '' : 'display: none;'; ?>">
 
-                <div class="details-grid">
-                    <!-- Left: Specifications Text -->
-                    <div class="details-text">
-                        <?php if (!empty($variant['specifications']) && is_array($variant['specifications'])): ?>
-                            <h3>Technische Daten - <?php echo esc_html($variant['variant_name']); ?></h3>
-                            <dl class="specs-list">
-                                <?php foreach ($variant['specifications'] as $spec): ?>
-                                    <div class="spec-row">
-                                        <dt><?php echo esc_html($spec['label']); ?></dt>
-                                        <dd><?php echo esc_html($spec['value']); ?></dd>
-                                    </div>
-                                <?php endforeach; ?>
-                            </dl>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Right: Variant Image -->
-                    <?php if (!empty($variant['variant_image']['url'])): ?>
-                    <div class="details-image">
-                        <img src="<?php echo esc_url($variant['variant_image']['url']); ?>"
-                             alt="<?php echo esc_attr($variant['variant_name']); ?>"
-                             loading="lazy">
-                    </div>
-                    <?php endif; ?>
-                </div>
-
-            </div>
-            <?php endforeach; ?>
-        </div>
-    </section>
-    <?php endif; ?>
-
-
-    <!-- STYLE & DESIGN SCHEMES -->
-    <?php if ($style_schemes && is_array($style_schemes) && count($style_schemes) > 0): ?>
-    <section class="style-schemes-section section-padding">
-        <div class="container">
-            <h2 class="section-title">Stil & Design Optionen</h2>
-            <p class="section-subtitle">Wählen Sie aus verschiedenen hochwertigen Material- und Stilkombinationen</p>
-
-            <?php foreach ($style_schemes as $scheme_index => $scheme): ?>
-                <div class="scheme-block">
-                    <!-- Scheme Header: Text LEFT, Material Palette RIGHT -->
-                    <div class="scheme-header-grid">
-                        <div class="scheme-text">
-                            <h3><?php echo esc_html($scheme['scheme_name']); ?></h3>
-                            <?php if (isset($scheme['scheme_description']) && !empty($scheme['scheme_description'])): ?>
-                                <p class="scheme-desc"><?php echo esc_html($scheme['scheme_description']); ?></p>
-                            <?php endif; ?>
-                        </div>
-
-                        <?php if (isset($scheme['color_palette_image']['url'])): ?>
-                            <div class="palette-preview">
-                                <img src="<?php echo esc_url($scheme['color_palette_image']['url']); ?>"
-                                     alt="Palette <?php echo esc_attr($scheme['scheme_name']); ?>"
-                                     loading="lazy">
-                            </div>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Gallery Grid -->
-                    <?php if (!empty($scheme['gallery']) && is_array($scheme['gallery'])): ?>
-                    <div class="style-gallery">
-                        <?php foreach ($scheme['gallery'] as $img_index => $image): ?>
-                            <div class="gallery-item"
-                                 onclick="openLightbox(<?php echo $scheme_index; ?>, <?php echo $img_index; ?>)">
-                                <img src="<?php echo esc_url($image['sizes']['medium'] ?? $image['url']); ?>"
-                                     alt="<?php echo esc_attr($scheme['scheme_name'] . ' - Ansicht ' . ($img_index + 1)); ?>"
-                                     loading="lazy">
-                                <div class="gallery-overlay">
-                                    <span class="zoom-icon">🔍</span>
-                                </div>
-                            </div>
+                <?php if ($terrase_type === 'nature'): ?>
+                    <!-- NATURE: Direct Orientation Buttons -->
+                    <?php
+                    $orientations = isset($color['nature_orientations']) ? $color['nature_orientations'] : array();
+                    if ($orientations && is_array($orientations) && count($orientations) > 0):
+                    ?>
+                    <div class="orientation-buttons-row">
+                        <?php foreach ($orientations as $or_index => $orientation): ?>
+                            <button
+                                class="terrase-orientation-btn <?php echo $or_index === 0 ? 'active' : ''; ?>"
+                                data-orientation-index="<?php echo $or_index; ?>"
+                                onclick="switchOrientation(<?php echo $color_index; ?>, <?php echo $or_index; ?>, '<?php echo esc_js($block_id); ?>')">
+                                <?php echo esc_html($orientation['orientation_name']); ?>
+                            </button>
                         <?php endforeach; ?>
                     </div>
+
+                    <!-- Orientation Galleries for Nature -->
+                    <?php foreach ($orientations as $or_index => $orientation): ?>
+                    <div class="orientation-gallery-content"
+                         id="orientation-<?php echo esc_attr($block_id); ?>-<?php echo $color_index; ?>-<?php echo $or_index; ?>"
+                         style="<?php echo $or_index === 0 ? '' : 'display: none;'; ?>">
+                        <?php if (isset($orientation['gallery']) && is_array($orientation['gallery'])): ?>
+                        <div class="terrase-gallery-grid">
+                            <?php foreach ($orientation['gallery'] as $img_index => $image): ?>
+                                <div class="gallery-item"
+                                     onclick="openTerraseLight box(<?php echo $color_index; ?>, <?php echo $or_index; ?>, <?php echo $img_index; ?>, '<?php echo esc_js($block_id); ?>')">
+                                    <img src="<?php echo esc_url($image['sizes']['medium'] ?? $image['url']); ?>"
+                                         alt="<?php echo esc_attr($color['color_name'] . ' - ' . $orientation['orientation_name'] . ' - Bild ' . ($img_index + 1)); ?>"
+                                         loading="lazy">
+                                    <div class="gallery-overlay">
+                                        <span class="zoom-icon">🔍</span>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
                     <?php endif; ?>
-                </div>
+
+                <?php elseif ($terrase_type === 'pure'): ?>
+                    <!-- PURE: Size Buttons → Orientation Buttons -->
+                    <?php
+                    $sizes = isset($color['pure_sizes']) ? $color['pure_sizes'] : array();
+                    if ($sizes && is_array($sizes) && count($sizes) > 0):
+                    ?>
+                    <div class="size-buttons-row">
+                        <?php foreach ($sizes as $size_index => $size): ?>
+                            <button
+                                class="terrase-size-btn <?php echo $size_index === 0 ? 'active' : ''; ?>"
+                                data-size-index="<?php echo $size_index; ?>"
+                                onclick="switchSize(<?php echo $color_index; ?>, <?php echo $size_index; ?>, '<?php echo esc_js($block_id); ?>')">
+                                <?php echo esc_html($size['size_name']); ?>
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- Size Content Areas -->
+                    <?php foreach ($sizes as $size_index => $size): ?>
+                    <div class="size-content"
+                         id="size-content-<?php echo esc_attr($block_id); ?>-<?php echo $color_index; ?>-<?php echo $size_index; ?>"
+                         style="<?php echo $size_index === 0 ? '' : 'display: none;'; ?>">
+
+                        <?php
+                        $orientations = isset($size['orientations']) ? $size['orientations'] : array();
+                        if ($orientations && is_array($orientations) && count($orientations) > 0):
+                        ?>
+                        <div class="orientation-buttons-row">
+                            <?php foreach ($orientations as $or_index => $orientation): ?>
+                                <button
+                                    class="terrase-orientation-btn <?php echo $or_index === 0 ? 'active' : ''; ?>"
+                                    data-orientation-index="<?php echo $or_index; ?>"
+                                    onclick="switchPureOrientation(<?php echo $color_index; ?>, <?php echo $size_index; ?>, <?php echo $or_index; ?>, '<?php echo esc_js($block_id); ?>')">
+                                    <?php echo esc_html($orientation['orientation_name']); ?>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <!-- Orientation Galleries for Pure -->
+                        <?php foreach ($orientations as $or_index => $orientation): ?>
+                        <div class="orientation-gallery-content"
+                             id="pure-orientation-<?php echo esc_attr($block_id); ?>-<?php echo $color_index; ?>-<?php echo $size_index; ?>-<?php echo $or_index; ?>"
+                             style="<?php echo $or_index === 0 ? '' : 'display: none;'; ?>">
+                            <?php if (isset($orientation['gallery']) && is_array($orientation['gallery'])): ?>
+                            <div class="terrase-gallery-grid">
+                                <?php foreach ($orientation['gallery'] as $img_index => $image): ?>
+                                    <div class="gallery-item"
+                                         onclick="openPureLightbox(<?php echo $color_index; ?>, <?php echo $size_index; ?>, <?php echo $or_index; ?>, <?php echo $img_index; ?>, '<?php echo esc_js($block_id); ?>')">
+                                        <img src="<?php echo esc_url($image['sizes']['medium'] ?? $image['url']); ?>"
+                                             alt="<?php echo esc_attr($color['color_name'] . ' - ' . $size['size_name'] . ' - ' . $orientation['orientation_name'] . ' - Bild ' . ($img_index + 1)); ?>"
+                                             loading="lazy">
+                                        <div class="gallery-overlay">
+                                            <span class="zoom-icon">🔍</span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
+
+                    </div>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
+
+                <?php endif; ?>
+
+            </div>
             <?php endforeach; ?>
         </div>
     </section>
 
     <!-- Lightbox -->
-    <div id="lightbox-<?php echo esc_attr($block_id); ?>" class="lightbox" onclick="closeLightbox()">
-        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-        <button class="lightbox-prev" onclick="event.stopPropagation(); navigateLightbox(-1)">‹</button>
-        <img class="lightbox-content" id="lightbox-img" src="" alt="">
-        <button class="lightbox-next" onclick="event.stopPropagation(); navigateLightbox(1)">›</button>
-        <div class="lightbox-counter" id="lightbox-counter"></div>
+    <div id="lightbox-<?php echo esc_attr($block_id); ?>" class="lightbox" onclick="closeTerraseL ightbox('<?php echo esc_js($block_id); ?>')">
+        <button class="lightbox-close" onclick="closeTerraseL ightbox('<?php echo esc_js($block_id); ?>')">&times;</button>
+        <button class="lightbox-prev" onclick="event.stopPropagation(); navigateTerraseL ightbox(-1, '<?php echo esc_js($block_id); ?>')">‹</button>
+        <img class="lightbox-content" id="lightbox-img-<?php echo esc_attr($block_id); ?>" src="" alt="">
+        <button class="lightbox-next" onclick="event.stopPropagation(); navigateTerraseL ightbox(1, '<?php echo esc_js($block_id); ?>')">›</button>
+        <div class="lightbox-counter" id="lightbox-counter-<?php echo esc_attr($block_id); ?>"></div>
     </div>
     <?php endif; ?>
 
 </article>
 
 <style>
-/* TERRASE COMPLETE PAGE - PROFESSIONAL DESIGN */
+/* TERRASE COMPLETE PAGE */
 .terrase-complete-page {
     width: 100%;
     margin: 0;
@@ -218,19 +262,9 @@ if ($hero_image && isset($hero_image['url'])) {
 .section-title {
     font-size: 2.5rem;
     color: var(--color-primary);
-    margin-bottom: 16px;
+    margin-bottom: 40px;
     text-align: center;
     font-weight: 700;
-}
-
-.section-subtitle {
-    font-size: 1.125rem;
-    color: var(--color-text-secondary);
-    text-align: center;
-    margin-bottom: 60px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 /* Hero Section */
@@ -311,117 +345,24 @@ if ($hero_image && isset($hero_image['url'])) {
     margin-bottom: 16px;
 }
 
-/* Features Section */
-.features-section {
+/* Technical Section */
+.technical-section {
     background: #ffffff;
 }
 
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-.feature-card {
-    background: var(--color-background);
-    padding: 30px;
-    border-radius: 16px;
-    text-align: center;
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.feature-card:hover {
-    border-color: var(--color-primary);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-}
-
-.feature-card .dashicons {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    color: var(--color-primary);
-    margin-bottom: 16px;
-}
-
-.feature-card h3 {
-    font-size: 1.25rem;
-    color: var(--color-primary);
-    margin-bottom: 12px;
-    font-weight: 700;
-}
-
-.feature-card p {
-    font-size: 0.95rem;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-}
-
-/* Size Variants Section */
-.size-variants-section {
-    background: #ffffff;
-}
-
-.size-variant-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-}
-
-.size-variant-tab {
-    padding: 12px 24px;
-    background: var(--color-background);
-    border: 2px solid var(--color-background);
-    color: var(--color-text-secondary);
-    font-weight: 600;
-    font-size: 1rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.size-variant-tab:hover {
-    border-color: var(--color-primary);
-}
-
-.size-variant-tab.active {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: white;
-}
-
-.size-variant-content {
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.details-grid {
+.tech-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 60px;
-    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 @media (max-width: 991px) {
-    .details-grid {
+    .tech-grid {
         grid-template-columns: 1fr;
         gap: 40px;
     }
-}
-
-.details-text h3 {
-    font-size: 1.75rem;
-    color: var(--color-primary);
-    margin-bottom: 24px;
-    font-weight: 700;
 }
 
 .specs-list {
@@ -453,71 +394,133 @@ if ($hero_image && isset($hero_image['url'])) {
     margin: 0;
 }
 
-.details-image img {
-    width: 100%;
-    height: auto;
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-/* Style Schemes Section */
-.style-schemes-section {
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-}
-
-.scheme-block {
-    margin-bottom: 80px;
-    padding: 60px 0;
-    background: transparent;
-    border-radius: 0;
-}
-
-.scheme-block:last-child {
-    margin-bottom: 0;
-}
-
-.scheme-header-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 40px;
-    margin-bottom: 40px;
+.tech-description-column {
+    display: flex;
     align-items: center;
 }
 
-@media (max-width: 991px) {
-    .scheme-header-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-}
-
-.scheme-text h3 {
-    font-size: 2rem;
-    color: var(--color-primary);
-    margin-bottom: 16px;
-    font-weight: 700;
-}
-
-.scheme-desc {
+.tech-description-text {
     font-size: 1.125rem;
-    color: var(--color-text-secondary);
     line-height: 1.8;
+    color: var(--color-text-secondary);
 }
 
-.palette-preview {
-    text-align: center;
+.tech-description-text p {
+    margin-bottom: 16px;
 }
 
-.palette-preview img {
-    max-width: 100%;
-    height: auto;
+/* Gallery Section */
+.terrase-gallery-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+/* Color Buttons */
+.color-buttons-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.terrase-color-btn {
+    padding: 14px 32px;
+    background: white;
+    border: 3px solid var(--color-background);
+    color: var(--color-text-primary);
+    font-weight: 700;
+    font-size: 1.125rem;
     border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.style-gallery {
+.terrase-color-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.terrase-color-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+/* Size Buttons (Pure) */
+.size-buttons-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.terrase-size-btn {
+    padding: 12px 24px;
+    background: var(--color-background);
+    border: 2px solid var(--color-background);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.terrase-size-btn:hover {
+    border-color: var(--color-primary);
+}
+
+.terrase-size-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+/* Orientation Buttons */
+.orientation-buttons-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.terrase-orientation-btn {
+    padding: 12px 28px;
+    background: white;
+    border: 2px solid #e5e7eb;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.terrase-orientation-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.terrase-orientation-btn.active {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+/* Gallery Grid */
+.terrase-gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .gallery-item {
@@ -627,37 +630,30 @@ if ($hero_image && isset($hero_image['url'])) {
     border-radius: 20px;
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 767px) {
     .section-title {
         font-size: 2rem;
-    }
-
-    .section-subtitle {
-        font-size: 1rem;
-        margin-bottom: 40px;
     }
 
     .banner-title {
         font-size: 1.75rem;
     }
 
-    .banner-text {
-        font-size: 1rem;
-    }
-
-    .features-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .feature-card {
-        padding: 24px;
-    }
-
-    .style-gallery {
+    .terrase-gallery-grid {
         grid-template-columns: 1fr;
         gap: 16px;
+    }
+
+    .color-buttons-row,
+    .size-buttons-row,
+    .orientation-buttons-row {
+        gap: 10px;
+    }
+
+    .terrase-color-btn {
+        padding: 12px 24px;
+        font-size: 1rem;
     }
 
     .lightbox-prev,
@@ -677,88 +673,175 @@ if ($hero_image && isset($hero_image['url'])) {
     .section-padding {
         padding: 40px 0;
     }
-
-    .scheme-block {
-        padding: 40px 0;
-    }
-
-    .details-text h3 {
-        font-size: 1.5rem;
-    }
-
-    .scheme-text h3 {
-        font-size: 1.75rem;
-    }
 }
 </style>
 
 <script>
-// Switch Size Variant
-function switchSizeVariant(index, blockId) {
-    const contents = document.querySelectorAll(`[id^="variant-${blockId}-"]`);
-    const tabs = document.querySelectorAll('.size-variant-tab');
+// Global data storage
+let terraseData_<?php echo esc_js($block_id); ?> = <?php echo json_encode($color_variants ?: []); ?>;
+let terraseType_<?php echo esc_js($block_id); ?> = '<?php echo esc_js($terrase_type); ?>';
+let currentColorIndex_<?php echo esc_js($block_id); ?> = 0;
+let currentSizeIndex_<?php echo esc_js($block_id); ?> = 0;
+let currentOrientationIndex_<?php echo esc_js($block_id); ?> = 0;
+let currentImageIndex_<?php echo esc_js($block_id); ?> = 0;
 
-    contents.forEach((content, i) => {
-        content.style.display = i === index ? 'block' : 'none';
+// Switch Color
+function switchTerraseColor(colorIndex, blockId) {
+    const colorContents = document.querySelectorAll(`[id^="color-content-${blockId}-"]`);
+    const colorBtns = document.querySelectorAll(`[data-color-index]`);
+
+    colorContents.forEach((content, i) => {
+        content.style.display = i === colorIndex ? 'block' : 'none';
     });
 
-    tabs.forEach((tab, i) => {
-        if (i === index) {
-            tab.classList.add('active');
+    colorBtns.forEach((btn, i) => {
+        if (i === colorIndex) {
+            btn.classList.add('active');
         } else {
-            tab.classList.remove('active');
+            btn.classList.remove('active');
         }
     });
+
+    window['currentColorIndex_' + blockId] = colorIndex;
 }
 
-// Lightbox functionality
-let currentSchemeIndex = 0;
-let currentImageIndex = 0;
-let schemesData = <?php echo json_encode($style_schemes ?: []); ?>;
+// Switch Orientation (Nature)
+function switchOrientation(colorIndex, orientationIndex, blockId) {
+    const orientationContents = document.querySelectorAll(`[id^="orientation-${blockId}-${colorIndex}-"]`);
+    const orientationBtns = document.querySelectorAll(`#color-content-${blockId}-${colorIndex} .terrase-orientation-btn`);
 
-function openLightbox(schemeIndex, imageIndex) {
-    currentSchemeIndex = schemeIndex;
-    currentImageIndex = imageIndex;
-    updateLightboxImage();
-    document.getElementById('lightbox-<?php echo esc_js($block_id); ?>').classList.add('active');
+    orientationContents.forEach((content, i) => {
+        content.style.display = i === orientationIndex ? 'block' : 'none';
+    });
+
+    orientationBtns.forEach((btn, i) => {
+        if (i === orientationIndex) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    window['currentOrientationIndex_' + blockId] = orientationIndex;
 }
 
-function closeLightbox() {
-    document.getElementById('lightbox-<?php echo esc_js($block_id); ?>').classList.remove('active');
+// Switch Size (Pure)
+function switchSize(colorIndex, sizeIndex, blockId) {
+    const sizeContents = document.querySelectorAll(`[id^="size-content-${blockId}-${colorIndex}-"]`);
+    const sizeBtns = document.querySelectorAll(`#color-content-${blockId}-${colorIndex} .terrase-size-btn`);
+
+    sizeContents.forEach((content, i) => {
+        content.style.display = i === sizeIndex ? 'block' : 'none';
+    });
+
+    sizeBtns.forEach((btn, i) => {
+        if (i === sizeIndex) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    window['currentSizeIndex_' + blockId] = sizeIndex;
 }
 
-function navigateLightbox(direction) {
-    const currentScheme = schemesData[currentSchemeIndex];
-    if (!currentScheme || !currentScheme.gallery) return;
+// Switch Orientation (Pure)
+function switchPureOrientation(colorIndex, sizeIndex, orientationIndex, blockId) {
+    const orientationContents = document.querySelectorAll(`[id^="pure-orientation-${blockId}-${colorIndex}-${sizeIndex}-"]`);
+    const orientationBtns = document.querySelectorAll(`#size-content-${blockId}-${colorIndex}-${sizeIndex} .terrase-orientation-btn`);
 
-    currentImageIndex += direction;
+    orientationContents.forEach((content, i) => {
+        content.style.display = i === orientationIndex ? 'block' : 'none';
+    });
 
-    if (currentImageIndex < 0) {
-        currentImageIndex = currentScheme.gallery.length - 1;
-    } else if (currentImageIndex >= currentScheme.gallery.length) {
-        currentImageIndex = 0;
+    orientationBtns.forEach((btn, i) => {
+        if (i === orientationIndex) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    window['currentOrientationIndex_' + blockId] = orientationIndex;
+}
+
+// Open Lightbox (Nature)
+function openTerraseL ightbox(colorIndex, orientationIndex, imageIndex, blockId) {
+    const data = window['terraseData_' + blockId];
+    const color = data[colorIndex];
+    const orientation = color.nature_orientations[orientationIndex];
+    const image = orientation.gallery[imageIndex];
+
+    window['currentColorIndex_' + blockId] = colorIndex;
+    window['currentOrientationIndex_' + blockId] = orientationIndex;
+    window['currentImageIndex_' + blockId] = imageIndex;
+
+    document.getElementById('lightbox-img-' + blockId).src = image.url;
+    document.getElementById('lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${orientation.gallery.length}`;
+    document.getElementById('lightbox-' + blockId).classList.add('active');
+}
+
+// Open Lightbox (Pure)
+function openPureLightbox(colorIndex, sizeIndex, orientationIndex, imageIndex, blockId) {
+    const data = window['terraseData_' + blockId];
+    const color = data[colorIndex];
+    const size = color.pure_sizes[sizeIndex];
+    const orientation = size.orientations[orientationIndex];
+    const image = orientation.gallery[imageIndex];
+
+    window['currentColorIndex_' + blockId] = colorIndex;
+    window['currentSizeIndex_' + blockId] = sizeIndex;
+    window['currentOrientationIndex_' + blockId] = orientationIndex;
+    window['currentImageIndex_' + blockId] = imageIndex;
+
+    document.getElementById('lightbox-img-' + blockId).src = image.url;
+    document.getElementById('lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${orientation.gallery.length}`;
+    document.getElementById('lightbox-' + blockId).classList.add('active');
+}
+
+// Close Lightbox
+function closeTerraseL ightbox(blockId) {
+    document.getElementById('lightbox-' + blockId).classList.remove('active');
+}
+
+// Navigate Lightbox
+function navigateTerraseL ightbox(direction, blockId) {
+    const data = window['terraseData_' + blockId];
+    const terraseType = window['terraseType_' + blockId];
+    const colorIndex = window['currentColorIndex_' + blockId];
+    const orientationIndex = window['currentOrientationIndex_' + blockId];
+    const sizeIndex = window['currentSizeIndex_' + blockId];
+    let imageIndex = window['currentImageIndex_' + blockId];
+
+    let gallery;
+    if (terraseType === 'nature') {
+        const color = data[colorIndex];
+        const orientation = color.nature_orientations[orientationIndex];
+        gallery = orientation.gallery;
+    } else {
+        const color = data[colorIndex];
+        const size = color.pure_sizes[sizeIndex];
+        const orientation = size.orientations[orientationIndex];
+        gallery = orientation.gallery;
     }
 
-    updateLightboxImage();
-}
+    imageIndex += direction;
+    if (imageIndex < 0) imageIndex = gallery.length - 1;
+    if (imageIndex >= gallery.length) imageIndex = 0;
 
-function updateLightboxImage() {
-    const currentScheme = schemesData[currentSchemeIndex];
-    if (!currentScheme || !currentScheme.gallery) return;
+    window['currentImageIndex_' + blockId] = imageIndex;
 
-    const image = currentScheme.gallery[currentImageIndex];
-    document.getElementById('lightbox-img').src = image.url;
-    document.getElementById('lightbox-counter').textContent =
-        `${currentImageIndex + 1} / ${currentScheme.gallery.length}`;
+    document.getElementById('lightbox-img-' + blockId).src = gallery[imageIndex].url;
+    document.getElementById('lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${gallery.length}`;
 }
 
 // Keyboard navigation
 document.addEventListener('keydown', function(e) {
     const lightbox = document.getElementById('lightbox-<?php echo esc_js($block_id); ?>');
     if (lightbox && lightbox.classList.contains('active')) {
-        if (e.key === 'Escape') closeLightbox();
-        if (e.key === 'ArrowLeft') navigateLightbox(-1);
-        if (e.key === 'ArrowRight') navigateLightbox(1);
+        if (e.key === 'Escape') closeTerraseL ightbox('<?php echo esc_js($block_id); ?>');
+        if (e.key === 'ArrowLeft') navigateTerraseL ightbox(-1, '<?php echo esc_js($block_id); ?>');
+        if (e.key === 'ArrowRight') navigateTerraseL ightbox(1, '<?php echo esc_js($block_id); ?>');
     }
 });
 </script>
