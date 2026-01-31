@@ -168,6 +168,17 @@
                     ]
                 },
                 {
+                    "key": "field_variant_pdf_download",
+                    "label": "PDF Download",
+                    "name": "pdf_download",
+                    "type": "file",
+                    "instructions": "PDF-Datei mit Informationen zu dieser Variante (optional). Wird vor den Grundrissen angezeigt.",
+                    "required": 0,
+                    "return_format": "array",
+                    "library": "all",
+                    "mime_types": "pdf"
+                },
+                {
                     "key": "field_variant_floor_plans",
                     "label": "Grundrisse",
                     "name": "floor_plans",
