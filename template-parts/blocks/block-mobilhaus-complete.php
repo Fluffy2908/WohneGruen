@@ -1093,9 +1093,9 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
         margin-bottom: 40px;
     }
 
-    /* Reduce scheme color names (h3) font size to half */
+    /* Adjust scheme color names (h3) - smaller than h2, bigger than p */
     .scheme-text h3 {
-        font-size: 1.25rem;
+        font-size: 1.6rem;
     }
 
     .interior-gallery {
@@ -1155,9 +1155,9 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
         font-size: 1.75rem;
     }
 
-    /* Further reduce scheme color names on very small screens */
+    /* Adjust scheme color names on very small screens */
     .scheme-text h3 {
-        font-size: 1.1rem;
+        font-size: 1.4rem;
     }
 
     .interior-gallery {
