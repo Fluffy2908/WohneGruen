@@ -331,6 +331,25 @@ $block_id = 'contact-complete-' . $block['id'];
     border-color: var(--color-primary);
 }
 
+.form-group input.error,
+.form-group textarea.error {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+.form-group input.success,
+.form-group textarea.success {
+    border-color: #28a745;
+}
+
+.field-error {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+    font-weight: 600;
+}
+
 .form-group textarea {
     resize: vertical;
 }
@@ -443,8 +462,104 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('contact-form');
     if (!form) return;
 
+    // Validation functions
+    function showFieldError(field, message) {
+        field.classList.add('error');
+        field.classList.remove('success');
+
+        // Remove existing error message
+        const existingError = field.parentElement.querySelector('.field-error');
+        if (existingError) {
+            existingError.remove();
+        }
+
+        // Add new error message
+        const errorDiv = document.createElement('span');
+        errorDiv.className = 'field-error';
+        errorDiv.textContent = message;
+        field.parentElement.appendChild(errorDiv);
+    }
+
+    function clearFieldError(field) {
+        field.classList.remove('error');
+        const errorDiv = field.parentElement.querySelector('.field-error');
+        if (errorDiv) {
+            errorDiv.remove();
+        }
+    }
+
+    function validateField(field) {
+        const value = field.value.trim();
+
+        // Check if required field is empty
+        if (field.hasAttribute('required') && !value) {
+            showFieldError(field, 'Dieses Feld ist erforderlich');
+            return false;
+        }
+
+        // Email validation
+        if (field.type === 'email' && value) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(value)) {
+                showFieldError(field, 'Bitte geben Sie eine gültige E-Mail-Adresse ein');
+                return false;
+            }
+        }
+
+        // Textarea minimum length
+        if (field.tagName === 'TEXTAREA' && value && value.length < 10) {
+            showFieldError(field, 'Bitte geben Sie mindestens 10 Zeichen ein');
+            return false;
+        }
+
+        clearFieldError(field);
+        if (value) {
+            field.classList.add('success');
+        }
+        return true;
+    }
+
+    function validateForm() {
+        const fields = form.querySelectorAll('input[required], textarea[required], input[type="email"]');
+        let isValid = true;
+
+        fields.forEach(field => {
+            if (!validateField(field)) {
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    // Add blur validation
+    form.querySelectorAll('input, textarea').forEach(field => {
+        field.addEventListener('blur', function() {
+            if (this.value.trim()) {
+                validateField(this);
+            }
+        });
+
+        field.addEventListener('input', function() {
+            if (this.classList.contains('error')) {
+                validateField(this);
+            }
+        });
+    });
+
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+
+        // Validate form before submitting
+        if (!validateForm()) {
+            // Scroll to first error
+            const firstError = form.querySelector('.error');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstError.focus();
+            }
+            return;
+        }
 
         const submitBtn = document.getElementById('submit-btn');
         const messageDiv = document.getElementById('form-message');
