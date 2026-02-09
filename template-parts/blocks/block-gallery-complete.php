@@ -610,6 +610,31 @@ $block_id = 'gallery-' . $block['id'];
     right: 20px;
 }
 
+/* Desktop: Arrows in middle of image */
+@media (min-width: 768px) {
+    .lightbox-prev,
+    .lightbox-next {
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%);
+    }
+
+    .lightbox-prev:hover,
+    .lightbox-next:hover,
+    .lightbox-prev:active,
+    .lightbox-next:active {
+        transform: translateY(-50%) scale(1.05);
+    }
+
+    .lightbox-prev {
+        left: 40px;
+    }
+
+    .lightbox-next {
+        right: 40px;
+    }
+}
+
 .lightbox-counter {
     position: absolute;
     bottom: 40px;

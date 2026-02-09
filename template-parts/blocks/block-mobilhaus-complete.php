@@ -1448,6 +1448,31 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     right: 20px;
 }
 
+/* Desktop: Arrows in middle of image */
+@media (min-width: 768px) {
+    .lightbox-prev,
+    .lightbox-next {
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%);
+    }
+
+    .lightbox-prev:hover,
+    .lightbox-next:hover,
+    .lightbox-prev:active,
+    .lightbox-next:active {
+        transform: translateY(-50%) scale(1.05);
+    }
+
+    .lightbox-prev {
+        left: 40px;
+    }
+
+    .lightbox-next {
+        right: 40px;
+    }
+}
+
 .lightbox-counter {
     position: absolute;
     bottom: 40px;
@@ -1809,6 +1834,31 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
 .terrase-lightbox-next {
     right: 20px;
+}
+
+/* Desktop: Terrace arrows in middle of image */
+@media (min-width: 768px) {
+    .terrase-lightbox-prev,
+    .terrase-lightbox-next {
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%);
+    }
+
+    .terrase-lightbox-prev:hover,
+    .terrase-lightbox-next:hover,
+    .terrase-lightbox-prev:active,
+    .terrase-lightbox-next:active {
+        transform: translateY(-50%) scale(1.05);
+    }
+
+    .terrase-lightbox-prev {
+        left: 40px;
+    }
+
+    .terrase-lightbox-next {
+        right: 40px;
+    }
 }
 
 .terrase-lightbox-counter {
