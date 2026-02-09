@@ -418,7 +418,10 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     <!-- Floor Plan Lightbox -->
     <div id="floor-plan-lightbox-<?php echo esc_attr($block_id); ?>" class="floor-plan-lightbox" onclick="closeFloorPlanLightbox('<?php echo esc_js($block_id); ?>')">
         <button class="floor-plan-lightbox-close" onclick="closeFloorPlanLightbox('<?php echo esc_js($block_id); ?>')">&times;</button>
+        <button class="lightbox-prev" onclick="event.stopPropagation(); navigateFloorPlanLightbox(-1, '<?php echo esc_js($block_id); ?>')">‹</button>
         <img class="floor-plan-lightbox-content" id="floor-plan-lightbox-img-<?php echo esc_attr($block_id); ?>" src="" alt="">
+        <button class="lightbox-next" onclick="event.stopPropagation(); navigateFloorPlanLightbox(1, '<?php echo esc_js($block_id); ?>')">›</button>
+        <div class="floor-plan-lightbox-counter" id="floor-plan-lightbox-counter-<?php echo esc_attr($block_id); ?>"></div>
         <div class="floor-plan-lightbox-info">
             <div class="floor-plan-lightbox-title" id="floor-plan-lightbox-title-<?php echo esc_attr($block_id); ?>"></div>
             <button class="floor-plan-lightbox-toggle" id="floor-plan-lightbox-toggle-<?php echo esc_attr($block_id); ?>" onclick="event.stopPropagation(); toggleFloorPlanLightboxView('<?php echo esc_js($block_id); ?>')">
@@ -435,7 +438,10 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     <!-- Layout Lightbox -->
     <div id="layout-lightbox-<?php echo esc_attr($block_id); ?>" class="floor-plan-lightbox" onclick="closeLayoutLightbox('<?php echo esc_js($block_id); ?>')">
         <button class="floor-plan-lightbox-close" onclick="closeLayoutLightbox('<?php echo esc_js($block_id); ?>')">&times;</button>
+        <button class="lightbox-prev" onclick="event.stopPropagation(); navigateLayoutLightbox(-1, '<?php echo esc_js($block_id); ?>')">‹</button>
         <img class="floor-plan-lightbox-content" id="layout-lightbox-img-<?php echo esc_attr($block_id); ?>" src="" alt="">
+        <button class="lightbox-next" onclick="event.stopPropagation(); navigateLayoutLightbox(1, '<?php echo esc_js($block_id); ?>')">›</button>
+        <div class="floor-plan-lightbox-counter" id="layout-lightbox-counter-<?php echo esc_attr($block_id); ?>"></div>
         <div class="floor-plan-lightbox-info">
             <div class="floor-plan-lightbox-title" id="layout-lightbox-title-<?php echo esc_attr($block_id); ?>"></div>
             <button class="floor-plan-lightbox-toggle" id="layout-lightbox-toggle-<?php echo esc_attr($block_id); ?>" onclick="event.stopPropagation(); toggleLayoutLightboxView('<?php echo esc_js($block_id); ?>')">
@@ -882,6 +888,19 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
 .floor-plan-lightbox-close:hover {
     background: rgba(255, 255, 255, 0.3);
+}
+
+.floor-plan-lightbox-counter {
+    position: absolute;
+    bottom: 170px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 6px 20px;
+    border-radius: 20px;
+    z-index: 10002;
 }
 
 .floor-plan-lightbox-info {
@@ -1396,8 +1415,7 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 .lightbox-prev,
 .lightbox-next {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 100px;
     background: #ffffff;
     border: 2px solid var(--color-primary);
     width: 50px;
@@ -1419,15 +1437,17 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 .lightbox-next:active {
     background: var(--color-primary);
     color: #ffffff;
-    transform: translateY(-50%) scale(1.05);
+    transform: scale(1.05);
 }
 
 .lightbox-prev {
-    left: 40px;
+    left: 50%;
+    transform: translateX(-70px);
 }
 
 .lightbox-next {
-    right: 40px;
+    left: 50%;
+    transform: translateX(20px);
 }
 
 .lightbox-counter {
@@ -1752,6 +1772,7 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 .terrase-lightbox-prev,
 .terrase-lightbox-next {
     position: absolute;
+    bottom: 100px;
     background: #ffffff;
     border: 2px solid var(--color-primary);
     color: var(--color-primary);
@@ -1776,7 +1797,7 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 .terrase-lightbox-next:active {
     background: var(--color-primary);
     color: #ffffff;
-    transform: translateY(-50%) scale(1.05);
+    transform: scale(1.05);
 }
 
 .terrase-lightbox-close {
@@ -1785,15 +1806,13 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 }
 
 .terrase-lightbox-prev {
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translateX(-70px);
 }
 
 .terrase-lightbox-next {
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translateX(20px);
 }
 
 .terrase-lightbox-counter {
@@ -2168,12 +2187,16 @@ document.addEventListener('keydown', function(e) {
     const floorPlanLightbox = document.getElementById('floor-plan-lightbox-<?php echo esc_js($block_id); ?>');
     if (floorPlanLightbox && floorPlanLightbox.classList.contains('active')) {
         if (e.key === 'Escape') closeFloorPlanLightbox('<?php echo esc_js($block_id); ?>');
+        else if (e.key === 'ArrowLeft') navigateFloorPlanLightbox(-1, '<?php echo esc_js($block_id); ?>');
+        else if (e.key === 'ArrowRight') navigateFloorPlanLightbox(1, '<?php echo esc_js($block_id); ?>');
     }
 
     // Layout lightbox keyboard navigation
     const layoutLightbox = document.getElementById('layout-lightbox-<?php echo esc_js($block_id); ?>');
     if (layoutLightbox && layoutLightbox.classList.contains('active')) {
         if (e.key === 'Escape') closeLayoutLightbox('<?php echo esc_js($block_id); ?>');
+        else if (e.key === 'ArrowLeft') navigateLayoutLightbox(-1, '<?php echo esc_js($block_id); ?>');
+        else if (e.key === 'ArrowRight') navigateLayoutLightbox(1, '<?php echo esc_js($block_id); ?>');
     }
 });
 
@@ -2249,10 +2272,15 @@ function openFloorPlanLightbox(blockId, variantIndex, planIndex) {
     const lightbox = document.getElementById('floor-plan-lightbox-' + blockId);
     const img = document.getElementById('floor-plan-lightbox-img-' + blockId);
     const title = document.getElementById('floor-plan-lightbox-title-' + blockId);
+    const counter = document.getElementById('floor-plan-lightbox-counter-' + blockId);
     const toggleBtn = document.getElementById('floor-plan-lightbox-toggle-' + blockId);
 
     img.src = state.isReversed ? plan.mirrored : plan.normal;
     title.textContent = plan.title || 'Grundriss';
+
+    if (counter) {
+        counter.textContent = `${planIndex + 1} / ${floorPlans[variantIndex].length}`;
+    }
 
     if (toggleBtn) {
         const toggleText = toggleBtn.querySelector('.floor-plan-toggle-text');
@@ -2263,6 +2291,56 @@ function openFloorPlanLightbox(blockId, variantIndex, planIndex) {
 
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
+}
+
+// Navigate Floor Plan Lightbox
+function navigateFloorPlanLightbox(direction, blockId) {
+    const state = window['floorPlanLightboxState_' + blockId];
+    const floorPlans = window['floorPlansData_' + blockId];
+
+    if (!floorPlans || !floorPlans[state.variantIndex]) return;
+
+    const plans = floorPlans[state.variantIndex];
+
+    // Update index
+    state.planIndex += direction;
+    if (state.planIndex < 0) {
+        state.planIndex = plans.length - 1;
+    } else if (state.planIndex >= plans.length) {
+        state.planIndex = 0;
+    }
+
+    const plan = plans[state.planIndex];
+
+    // Get current view state for this plan
+    const stateKey = blockId + '-' + state.variantIndex + '-' + state.planIndex;
+    state.isReversed = floorPlanStates[stateKey] || false;
+
+    const img = document.getElementById('floor-plan-lightbox-img-' + blockId);
+    const title = document.getElementById('floor-plan-lightbox-title-' + blockId);
+    const counter = document.getElementById('floor-plan-lightbox-counter-' + blockId);
+    const toggleBtn = document.getElementById('floor-plan-lightbox-toggle-' + blockId);
+
+    // Fade out
+    img.style.opacity = '0.5';
+
+    setTimeout(function() {
+        img.src = state.isReversed ? plan.mirrored : plan.normal;
+        title.textContent = plan.title || 'Grundriss';
+
+        if (counter) {
+            counter.textContent = `${state.planIndex + 1} / ${plans.length}`;
+        }
+
+        if (toggleBtn) {
+            const toggleText = toggleBtn.querySelector('.floor-plan-toggle-text');
+            if (toggleText) {
+                toggleText.textContent = state.isReversed ? 'Normal anzeigen' : 'Gespiegelt anzeigen';
+            }
+        }
+
+        img.style.opacity = '1';
+    }, 200);
 }
 
 // Close Floor Plan Lightbox
@@ -2351,10 +2429,15 @@ function openLayoutLightbox(blockId, variantIndex, layoutIndex) {
     const lightbox = document.getElementById('layout-lightbox-' + blockId);
     const img = document.getElementById('layout-lightbox-img-' + blockId);
     const title = document.getElementById('layout-lightbox-title-' + blockId);
+    const counter = document.getElementById('layout-lightbox-counter-' + blockId);
     const toggleBtn = document.getElementById('layout-lightbox-toggle-' + blockId);
 
     img.src = state.isReversed ? layout.mirrored : layout.normal;
     title.textContent = layout.name || 'Layout ' + (layoutIndex + 1);
+
+    if (counter) {
+        counter.textContent = `${layoutIndex + 1} / ${variant.layouts.length}`;
+    }
 
     if (toggleBtn) {
         const toggleText = toggleBtn.querySelector('.floor-plan-toggle-text');
@@ -2365,6 +2448,49 @@ function openLayoutLightbox(blockId, variantIndex, layoutIndex) {
 
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
+}
+
+// Navigate Layout Lightbox
+function navigateLayoutLightbox(direction, blockId) {
+    const state = window['layoutLightboxState_' + blockId];
+    const variant = window.sizeVariants[state.variantIndex];
+
+    if (!variant || !variant.layouts) return;
+
+    // Update index
+    state.layoutIndex += direction;
+    if (state.layoutIndex < 0) {
+        state.layoutIndex = variant.layouts.length - 1;
+    } else if (state.layoutIndex >= variant.layouts.length) {
+        state.layoutIndex = 0;
+    }
+
+    const layout = variant.layouts[state.layoutIndex];
+    const img = document.getElementById('layout-lightbox-img-' + blockId);
+    const title = document.getElementById('layout-lightbox-title-' + blockId);
+    const counter = document.getElementById('layout-lightbox-counter-' + blockId);
+    const toggleBtn = document.getElementById('layout-lightbox-toggle-' + blockId);
+
+    // Fade out
+    img.style.opacity = '0.5';
+
+    setTimeout(function() {
+        img.src = state.isReversed ? layout.mirrored : layout.normal;
+        title.textContent = layout.name || 'Layout ' + (state.layoutIndex + 1);
+
+        if (counter) {
+            counter.textContent = `${state.layoutIndex + 1} / ${variant.layouts.length}`;
+        }
+
+        if (toggleBtn) {
+            const toggleText = toggleBtn.querySelector('.floor-plan-toggle-text');
+            if (toggleText) {
+                toggleText.textContent = state.isReversed ? 'Normal anzeigen' : 'Gespiegelt anzeigen';
+            }
+        }
+
+        img.style.opacity = '1';
+    }, 200);
 }
 
 // Close Layout Lightbox

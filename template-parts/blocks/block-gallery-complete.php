@@ -577,8 +577,7 @@ $block_id = 'gallery-' . $block['id'];
 .lightbox-prev,
 .lightbox-next {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 100px;
     background: #ffffff;
     border: 2px solid var(--color-primary);
     width: 50px;
@@ -600,15 +599,17 @@ $block_id = 'gallery-' . $block['id'];
 .lightbox-next:active {
     background: var(--color-primary);
     color: #ffffff;
-    transform: translateY(-50%) scale(1.05);
+    transform: scale(1.05);
 }
 
 .lightbox-prev {
-    left: 40px;
+    left: 50%;
+    transform: translateX(-70px);
 }
 
 .lightbox-next {
-    right: 40px;
+    left: 50%;
+    transform: translateX(20px);
 }
 
 .lightbox-counter {
