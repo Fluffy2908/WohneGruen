@@ -787,8 +787,11 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     pointer-events: none;
 }
 
-.floor-plan-image-box:hover .floor-plan-hover-overlay {
-    opacity: 1;
+/* Only show hover effect on devices that support hover (desktop) */
+@media (hover: hover) {
+    .floor-plan-image-box:hover .floor-plan-hover-overlay {
+        opacity: 1;
+    }
 }
 
 .floor-plan-hover-overlay .zoom-icon {
@@ -1294,8 +1297,11 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     pointer-events: none;
 }
 
-.gallery-item:hover .gallery-overlay {
-    opacity: 1;
+/* Only show hover effect on devices that support hover (desktop) */
+@media (hover: hover) {
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+    }
 }
 
 .zoom-icon {
@@ -1635,8 +1641,11 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     transition: opacity 0.3s ease;
 }
 
-.terrase-gallery-item:hover .terrase-gallery-overlay {
-    opacity: 1;
+/* Only show hover effect on devices that support hover (desktop) */
+@media (hover: hover) {
+    .terrase-gallery-item:hover .terrase-gallery-overlay {
+        opacity: 1;
+    }
 }
 
 .terrase-gallery-overlay .zoom-icon {
