@@ -783,9 +783,34 @@ window.galleryImages = [
 
 window.currentImage = 0;
 window.sliderPosition = 0;
+window.currentFilter = 'all'; // Track active filter
+window.filteredImageIndices = []; // Track which images are currently visible
+
+// Update filtered images array based on current filter
+function updateFilteredImages() {
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const sliderItems = document.querySelectorAll('.slider-item');
+
+    window.filteredImageIndices = [];
+
+    // Add visible gallery items
+    galleryItems.forEach(item => {
+        if (item.style.display !== 'none') {
+            window.filteredImageIndices.push(parseInt(item.dataset.imageIndex));
+        }
+    });
+
+    // Add slider items (always visible)
+    sliderItems.forEach(item => {
+        window.filteredImageIndices.push(parseInt(item.dataset.imageIndex));
+    });
+}
 
 // DOMContentLoaded - Initialize all event listeners
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize filtered images with all images
+    updateFilteredImages();
+
     // Filter functionality
     const filterBtns = document.querySelectorAll('.filter-btn');
     const galleryItems = document.querySelectorAll('.gallery-item');
@@ -795,6 +820,7 @@ document.addEventListener('DOMContentLoaded', function() {
     filterBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             const filter = this.dataset.filter;
+            window.currentFilter = filter;
 
             filterBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
@@ -808,8 +834,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
 
-            // Slider items are always visible (they're uncategorized)
-            // No filtering needed for slider items
+            // Update filtered images array
+            updateFilteredImages();
 
             // Reset slider position
             window.sliderPosition = 0;
@@ -906,14 +932,18 @@ function moveGallerySlider(direction) {
 
 // Lightbox functions
 function openLightbox(imageIndex) {
-    window.currentImage = imageIndex;
+    // Find the position of this image in the filtered array
+    const positionInFiltered = window.filteredImageIndices.indexOf(imageIndex);
+    if (positionInFiltered === -1) return; // Image not in filtered results
+
+    window.currentFilteredPosition = positionInFiltered;
 
     const lightbox = document.getElementById('gallery-lightbox');
     const img = document.getElementById('gallery-lightbox-img');
     const counter = document.getElementById('gallery-lightbox-counter');
 
     img.src = window.galleryImages[imageIndex];
-    counter.textContent = `${imageIndex + 1} / ${window.galleryImages.length}`;
+    counter.textContent = `${positionInFiltered + 1} / ${window.filteredImageIndices.length}`;
 
     lightbox.style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -925,19 +955,22 @@ function closeLightbox() {
 }
 
 function navigateLightbox(direction) {
-    window.currentImage += direction;
+    // Navigate through filtered images only
+    window.currentFilteredPosition += direction;
 
-    if (window.currentImage < 0) {
-        window.currentImage = window.galleryImages.length - 1;
-    } else if (window.currentImage >= window.galleryImages.length) {
-        window.currentImage = 0;
+    if (window.currentFilteredPosition < 0) {
+        window.currentFilteredPosition = window.filteredImageIndices.length - 1;
+    } else if (window.currentFilteredPosition >= window.filteredImageIndices.length) {
+        window.currentFilteredPosition = 0;
     }
+
+    const actualImageIndex = window.filteredImageIndices[window.currentFilteredPosition];
 
     const img = document.getElementById('gallery-lightbox-img');
     const counter = document.getElementById('gallery-lightbox-counter');
 
-    img.src = window.galleryImages[window.currentImage];
-    counter.textContent = `${window.currentImage + 1} / ${window.galleryImages.length}`;
+    img.src = window.galleryImages[actualImageIndex];
+    counter.textContent = `${window.currentFilteredPosition + 1} / ${window.filteredImageIndices.length}`;
 }
 
 // Keyboard navigation
