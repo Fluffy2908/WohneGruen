@@ -579,22 +579,28 @@ $block_id = 'gallery-' . $block['id'];
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.3);
-    border: none;
-    width: 45px;
-    height: 45px;
+    background: #ffffff;
+    border: 2px solid var(--color-primary);
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     cursor: pointer;
     font-size: 1.5rem;
     color: var(--color-primary);
     z-index: 10001;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .lightbox-prev:hover,
-.lightbox-next:hover {
-    background: rgba(255, 255, 255, 0.5);
-    transform: translateY(-50%) scale(1.1);
+.lightbox-next:hover,
+.lightbox-prev:active,
+.lightbox-next:active {
+    background: var(--color-primary);
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.05);
 }
 
 .lightbox-prev {
@@ -689,12 +695,9 @@ $block_id = 'gallery-' . $block['id'];
 
     .lightbox-prev,
     .lightbox-next {
-        width: 45px;
-        height: 45px;
+        width: 50px;
+        height: 50px;
         font-size: 1.5rem;
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(5px);
-        color: var(--color-primary);
     }
 
     .lightbox-prev {

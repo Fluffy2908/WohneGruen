@@ -149,10 +149,16 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
                                 <div class="layout-image-wrapper"
                                      id="layout-<?php echo esc_attr($block_id); ?>-<?php echo $var_index; ?>-<?php echo $idx; ?>"
                                      style="<?php echo $idx === 0 ? '' : 'display: none;'; ?>">
-                                    <img class="layout-image"
-                                         src="<?php echo esc_url($layout['normal_image']['url']); ?>"
-                                         alt="<?php echo esc_attr($layout['layout_name'] ?: 'Layout ' . ($idx + 1)); ?>"
-                                         loading="lazy">
+                                    <div class="layout-image-clickable"
+                                         onclick="openLayoutLightbox('<?php echo esc_js($block_id); ?>', <?php echo $var_index; ?>, <?php echo $idx; ?>)">
+                                        <img class="layout-image"
+                                             src="<?php echo esc_url($layout['normal_image']['url']); ?>"
+                                             alt="<?php echo esc_attr($layout['layout_name'] ?: 'Layout ' . ($idx + 1)); ?>"
+                                             loading="lazy">
+                                        <div class="layout-hover-overlay">
+                                            <span class="zoom-icon">🔍</span>
+                                        </div>
+                                    </div>
 
                                     <?php if (isset($layout['layout_name']) && !empty($layout['layout_name'])): ?>
                                         <div class="layout-label"><?php echo esc_html($layout['layout_name']); ?></div>
@@ -416,6 +422,23 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
         <div class="floor-plan-lightbox-info">
             <div class="floor-plan-lightbox-title" id="floor-plan-lightbox-title-<?php echo esc_attr($block_id); ?>"></div>
             <button class="floor-plan-lightbox-toggle" id="floor-plan-lightbox-toggle-<?php echo esc_attr($block_id); ?>" onclick="event.stopPropagation(); toggleFloorPlanLightboxView('<?php echo esc_js($block_id); ?>')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="1 4 1 10 7 10"></polyline>
+                    <polyline points="23 20 23 14 17 14"></polyline>
+                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                </svg>
+                <span class="floor-plan-toggle-text">Gespiegelt anzeigen</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Layout Lightbox -->
+    <div id="layout-lightbox-<?php echo esc_attr($block_id); ?>" class="floor-plan-lightbox" onclick="closeLayoutLightbox('<?php echo esc_js($block_id); ?>')">
+        <button class="floor-plan-lightbox-close" onclick="closeLayoutLightbox('<?php echo esc_js($block_id); ?>')">&times;</button>
+        <img class="floor-plan-lightbox-content" id="layout-lightbox-img-<?php echo esc_attr($block_id); ?>" src="" alt="">
+        <div class="floor-plan-lightbox-info">
+            <div class="floor-plan-lightbox-title" id="layout-lightbox-title-<?php echo esc_attr($block_id); ?>"></div>
+            <button class="floor-plan-lightbox-toggle" id="layout-lightbox-toggle-<?php echo esc_attr($block_id); ?>" onclick="event.stopPropagation(); toggleLayoutLightboxView('<?php echo esc_js($block_id); ?>')">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="1 4 1 10 7 10"></polyline>
                     <polyline points="23 20 23 14 17 14"></polyline>
@@ -976,11 +999,40 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     width: 100%;
 }
 
+.layout-image-clickable {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.layout-image-clickable:hover {
+    transform: translateY(-4px);
+}
+
 .layout-image {
     width: 100%;
     height: auto;
     display: block;
     transition: opacity 0.3s ease;
+}
+
+.layout-hover-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(var(--color-primary-rgb), 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+/* Only show hover effect on devices that support hover (desktop) */
+@media (hover: hover) {
+    .layout-image-clickable:hover .layout-hover-overlay {
+        opacity: 1;
+    }
 }
 
 .layout-label {
@@ -1346,15 +1398,28 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.3);
-    border: none;
-    width: 45px;
-    height: 45px;
+    background: #ffffff;
+    border: 2px solid var(--color-primary);
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     cursor: pointer;
     font-size: 1.5rem;
     color: var(--color-primary);
     z-index: 10001;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover,
+.lightbox-prev:active,
+.lightbox-next:active {
+    background: var(--color-primary);
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.05);
 }
 
 .lightbox-prev {
@@ -1550,12 +1615,9 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
     .lightbox-prev,
     .lightbox-next {
-        width: 45px;
-        height: 45px;
+        width: 50px;
+        height: 50px;
         font-size: 1.5rem;
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(5px);
-        color: var(--color-primary);
     }
 
     .lightbox-prev {
@@ -1690,18 +1752,18 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 .terrase-lightbox-prev,
 .terrase-lightbox-next {
     position: absolute;
-    background: rgba(255, 255, 255, 0.3);
+    background: #ffffff;
+    border: 2px solid var(--color-primary);
     color: var(--color-primary);
-    border: none;
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     font-size: 1.5rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .terrase-lightbox-close:hover {
@@ -1709,9 +1771,12 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 }
 
 .terrase-lightbox-prev:hover,
-.terrase-lightbox-next:hover {
-    background: rgba(255, 255, 255, 0.5);
-    transform: translateY(-50%) scale(1.1);
+.terrase-lightbox-next:hover,
+.terrase-lightbox-prev:active,
+.terrase-lightbox-next:active {
+    background: var(--color-primary);
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.05);
 }
 
 .terrase-lightbox-close {
@@ -1762,12 +1827,9 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
     .terrase-lightbox-prev,
     .terrase-lightbox-next {
-        width: 45px;
-        height: 45px;
+        width: 50px;
+        height: 50px;
         font-size: 1.5rem;
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(5px);
-        color: var(--color-primary);
     }
 
     .terrase-lightbox-prev {
@@ -2107,6 +2169,12 @@ document.addEventListener('keydown', function(e) {
     if (floorPlanLightbox && floorPlanLightbox.classList.contains('active')) {
         if (e.key === 'Escape') closeFloorPlanLightbox('<?php echo esc_js($block_id); ?>');
     }
+
+    // Layout lightbox keyboard navigation
+    const layoutLightbox = document.getElementById('layout-lightbox-<?php echo esc_js($block_id); ?>');
+    if (layoutLightbox && layoutLightbox.classList.contains('active')) {
+        if (e.key === 'Escape') closeLayoutLightbox('<?php echo esc_js($block_id); ?>');
+    }
 });
 
 // Touch swipe support for mobile
@@ -2246,6 +2314,110 @@ function toggleFloorPlanLightboxView(blockId) {
         const mainImg = document.getElementById('floor-plan-' + blockId + '-' + state.variantIndex + '-' + state.planIndex);
         if (mainImg) {
             mainImg.src = state.isReversed ? plan.mirrored : plan.normal;
+        }
+    }, 300);
+}
+
+// ========== LAYOUT LIGHTBOX FUNCTIONS ==========
+
+// Store layout lightbox state
+window['layoutLightboxState_<?php echo esc_js($block_id); ?>'] = {
+    variantIndex: 0,
+    layoutIndex: 0,
+    isReversed: false
+};
+
+// Open Layout Lightbox
+function openLayoutLightbox(blockId, variantIndex, layoutIndex) {
+    const variant = window.sizeVariants[variantIndex];
+    if (!variant || !variant.layouts || !variant.layouts[layoutIndex]) {
+        return;
+    }
+
+    const layout = variant.layouts[layoutIndex];
+    const state = window['layoutLightboxState_' + blockId];
+
+    // Update state
+    state.variantIndex = variantIndex;
+    state.layoutIndex = layoutIndex;
+
+    // Get current reversed state from variantStates
+    if (!window.variantStates[variantIndex]) {
+        window.variantStates[variantIndex] = { layoutIndex: 0, reversed: false };
+    }
+    state.isReversed = window.variantStates[variantIndex].reversed || false;
+
+    // Update lightbox content
+    const lightbox = document.getElementById('layout-lightbox-' + blockId);
+    const img = document.getElementById('layout-lightbox-img-' + blockId);
+    const title = document.getElementById('layout-lightbox-title-' + blockId);
+    const toggleBtn = document.getElementById('layout-lightbox-toggle-' + blockId);
+
+    img.src = state.isReversed ? layout.mirrored : layout.normal;
+    title.textContent = layout.name || 'Layout ' + (layoutIndex + 1);
+
+    if (toggleBtn) {
+        const toggleText = toggleBtn.querySelector('.floor-plan-toggle-text');
+        if (toggleText) {
+            toggleText.textContent = state.isReversed ? 'Normal anzeigen' : 'Gespiegelt anzeigen';
+        }
+    }
+
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close Layout Lightbox
+function closeLayoutLightbox(blockId) {
+    const lightbox = document.getElementById('layout-lightbox-' + blockId);
+    lightbox.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Toggle Layout Lightbox View (Normal <-> Mirrored)
+function toggleLayoutLightboxView(blockId) {
+    const state = window['layoutLightboxState_' + blockId];
+    const variant = window.sizeVariants[state.variantIndex];
+
+    if (!variant || !variant.layouts || !variant.layouts[state.layoutIndex]) {
+        return;
+    }
+
+    const layout = variant.layouts[state.layoutIndex];
+    const img = document.getElementById('layout-lightbox-img-' + blockId);
+    const toggleBtn = document.getElementById('layout-lightbox-toggle-' + blockId);
+
+    // Toggle state
+    state.isReversed = !state.isReversed;
+
+    // Sync with main view state
+    if (!window.variantStates[state.variantIndex]) {
+        window.variantStates[state.variantIndex] = { layoutIndex: 0, reversed: false };
+    }
+    window.variantStates[state.variantIndex].reversed = state.isReversed;
+
+    // Fade out
+    img.style.opacity = '0.5';
+
+    setTimeout(function() {
+        // Switch image
+        img.src = state.isReversed ? layout.mirrored : layout.normal;
+
+        // Fade in
+        img.style.opacity = '1';
+
+        // Update button text
+        if (toggleBtn) {
+            const toggleText = toggleBtn.querySelector('.floor-plan-toggle-text');
+            if (toggleText) {
+                toggleText.textContent = state.isReversed ? 'Normal anzeigen' : 'Gespiegelt anzeigen';
+            }
+        }
+
+        // Also update the main layout view if visible
+        const mainImg = document.querySelector(`#layout-${blockId}-${state.variantIndex}-${state.layoutIndex} .layout-image`);
+        if (mainImg) {
+            mainImg.src = state.isReversed ? layout.mirrored : layout.normal;
         }
     }, 300);
 }
