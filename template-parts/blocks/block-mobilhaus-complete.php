@@ -2229,9 +2229,27 @@ window.openMobilhausTerraseLightbox = function(sizeIndex, orientationIndex, imag
     window['currentTerraseImageIndex_' + blockId] = imageIndex;
     window['currentTerraseColor_' + blockId] = color;
 
-    document.getElementById('terrase-lightbox-img-' + blockId).src = image.url;
-    document.getElementById('terrase-lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${orientation.gallery.length}`;
-    document.getElementById('terrase-lightbox-' + blockId).classList.add('active');
+    const img = document.getElementById('terrase-lightbox-img-' + blockId);
+    const counter = document.getElementById('terrase-lightbox-counter-' + blockId);
+    const lightbox = document.getElementById('terrase-lightbox-' + blockId);
+
+    // Show loading state
+    img.style.opacity = '0.3';
+    img.classList.add('loading');
+
+    // Preload image before showing
+    const preloadImg = new Image();
+    preloadImg.onload = function() {
+        img.src = image.url;
+        img.style.opacity = '1';
+        img.classList.remove('loading');
+        // Preload adjacent images for faster navigation
+        preloadAdjacentTerraceImages(sizeIndex, orientationIndex, imageIndex, color, blockId);
+    };
+    preloadImg.src = image.url;
+
+    counter.textContent = `${imageIndex + 1} / ${orientation.gallery.length}`;
+    lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
 };
 
@@ -2259,9 +2277,52 @@ window.navigateMobilhausTerraseLightbox = function(direction, blockId) {
 
     window['currentTerraseImageIndex_' + blockId] = imageIndex;
 
-    document.getElementById('terrase-lightbox-img-' + blockId).src = gallery[imageIndex].url;
-    document.getElementById('terrase-lightbox-counter-' + blockId).textContent = `${imageIndex + 1} / ${gallery.length}`;
+    const img = document.getElementById('terrase-lightbox-img-' + blockId);
+    const counter = document.getElementById('terrase-lightbox-counter-' + blockId);
+
+    // Show loading state
+    img.style.opacity = '0.3';
+    img.classList.add('loading');
+
+    // Preload before showing
+    const preloadImg = new Image();
+    preloadImg.onload = function() {
+        img.src = gallery[imageIndex].url;
+        img.style.opacity = '1';
+        img.classList.remove('loading');
+        // Preload adjacent images for faster navigation
+        preloadAdjacentTerraceImages(sizeIndex, orientationIndex, imageIndex, color, blockId);
+    };
+    preloadImg.src = gallery[imageIndex].url;
+
+    counter.textContent = `${imageIndex + 1} / ${gallery.length}`;
 };
+
+// Preload adjacent terrace images for faster navigation
+function preloadAdjacentTerraceImages(sizeIndex, orientationIndex, currentIndex, color, blockId) {
+    const data = window['terraseData_' + color + '_' + blockId];
+    if (!data || !data[sizeIndex]) return;
+
+    const size = data[sizeIndex];
+    if (!size.orientations || !size.orientations[orientationIndex]) return;
+
+    const gallery = size.orientations[orientationIndex].gallery;
+    if (!gallery) return;
+
+    // Preload next image
+    const nextIndex = currentIndex >= gallery.length - 1 ? 0 : currentIndex + 1;
+    if (gallery[nextIndex]) {
+        const nextImg = new Image();
+        nextImg.src = gallery[nextIndex].url;
+    }
+
+    // Preload previous image
+    const prevIndex = currentIndex <= 0 ? gallery.length - 1 : currentIndex - 1;
+    if (gallery[prevIndex]) {
+        const prevImg = new Image();
+        prevImg.src = gallery[prevIndex].url;
+    }
+}
 
 // Update terrace display based on selected house color
 window.updateTerraceColorDisplay = function(blockId) {
