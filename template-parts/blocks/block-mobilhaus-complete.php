@@ -217,12 +217,19 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
                                 <?php if (!empty($plan['description'])): ?>
                                     <p><?php echo esc_html($plan['description']); ?></p>
                                 <?php endif; ?>
-                                <div class="floor-plan-images">
-                                    <img class="floor-plan-image active"
-                                         id="floor-plan-<?php echo esc_attr($block_id); ?>-<?php echo $var_index; ?>-<?php echo $plan_index; ?>"
-                                         src="<?php echo esc_url($plan['normal_plan']['url']); ?>"
-                                         alt="<?php echo esc_attr($plan['title'] ?: 'Grundriss'); ?>"
-                                         loading="lazy">
+                                <div class="floor-plan-images-wrapper">
+                                    <!-- Clickable image container -->
+                                    <div class="floor-plan-image-box clickable" onclick="openFloorPlanLightbox('<?php echo esc_js($block_id); ?>', <?php echo $var_index; ?>, <?php echo $plan_index; ?>)">
+                                        <img class="floor-plan-image active"
+                                             id="floor-plan-<?php echo esc_attr($block_id); ?>-<?php echo $var_index; ?>-<?php echo $plan_index; ?>"
+                                             src="<?php echo esc_url($plan['normal_plan']['url']); ?>"
+                                             alt="<?php echo esc_attr($plan['title'] ?: 'Grundriss'); ?> - Klicken zum Vergrößern"
+                                             loading="lazy">
+                                        <div class="floor-plan-hover-overlay">
+                                            <span class="zoom-icon">🔍</span>
+                                        </div>
+                                    </div>
+                                    <!-- Toggle button -->
                                     <button class="floor-plan-toggle"
                                             onclick="toggleFloorPlan('<?php echo esc_js($block_id); ?>', <?php echo $var_index; ?>, <?php echo $plan_index; ?>, '<?php echo esc_url($plan['normal_plan']['url']); ?>', '<?php echo esc_url($plan['mirrored_plan']['url']); ?>')">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -401,6 +408,23 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
         <div class="terrase-lightbox-counter" id="terrase-lightbox-counter-<?php echo esc_attr($block_id); ?>"></div>
     </div>
     <?php endif; ?>
+
+    <!-- Floor Plan Lightbox -->
+    <div id="floor-plan-lightbox-<?php echo esc_attr($block_id); ?>" class="floor-plan-lightbox" onclick="closeFloorPlanLightbox('<?php echo esc_js($block_id); ?>')">
+        <button class="floor-plan-lightbox-close" onclick="closeFloorPlanLightbox('<?php echo esc_js($block_id); ?>')">&times;</button>
+        <img class="floor-plan-lightbox-content" id="floor-plan-lightbox-img-<?php echo esc_attr($block_id); ?>" src="" alt="">
+        <div class="floor-plan-lightbox-info">
+            <div class="floor-plan-lightbox-title" id="floor-plan-lightbox-title-<?php echo esc_attr($block_id); ?>"></div>
+            <button class="floor-plan-lightbox-toggle" id="floor-plan-lightbox-toggle-<?php echo esc_attr($block_id); ?>" onclick="event.stopPropagation(); toggleFloorPlanLightboxView('<?php echo esc_js($block_id); ?>')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="1 4 1 10 7 10"></polyline>
+                    <polyline points="23 20 23 14 17 14"></polyline>
+                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                </svg>
+                <span class="floor-plan-toggle-text">Gespiegelt anzeigen</span>
+            </button>
+        </div>
+    </div>
 
     <!-- INTERIOR COLOR SCHEMES -->
     <?php if ($interior_schemes && is_array($interior_schemes)): ?>
@@ -717,20 +741,62 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     margin-bottom: 16px;
 }
 
-.floor-plan-images {
+.floor-plan-images-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.floor-plan-image-box {
     position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.floor-plan-image-box.clickable {
+    cursor: pointer;
+}
+
+.floor-plan-image-box.clickable:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .floor-plan-image {
     width: 100%;
     height: auto;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    display: block;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.floor-plan-image-box.clickable:hover .floor-plan-image {
+    transform: scale(1.02);
+}
+
+.floor-plan-hover-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(var(--color-primary-rgb), 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.floor-plan-image-box:hover .floor-plan-hover-overlay {
+    opacity: 1;
+}
+
+.floor-plan-hover-overlay .zoom-icon {
+    font-size: 3rem;
+    color: white;
 }
 
 .floor-plan-toggle {
-    margin-top: 16px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -748,6 +814,97 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     background: var(--color-primary-dark);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
+}
+
+/* Floor Plan Lightbox */
+.floor-plan-lightbox {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.floor-plan-lightbox.active {
+    display: flex;
+}
+
+.floor-plan-lightbox-content {
+    max-width: 90%;
+    max-height: 75vh;
+    object-fit: contain;
+    transition: opacity 0.3s ease;
+}
+
+.floor-plan-lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    font-size: 3rem;
+    cursor: pointer;
+    padding: 10px 20px;
+    transition: background 0.3s ease;
+    line-height: 1;
+    z-index: 10000;
+}
+
+.floor-plan-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.floor-plan-lightbox-info {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 90%;
+}
+
+.floor-plan-lightbox-title {
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.floor-plan-lightbox-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
+}
+
+.floor-plan-lightbox-toggle:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(var(--color-primary-rgb), 0.4);
+}
+
+.floor-plan-lightbox-toggle svg {
+    width: 20px;
+    height: 20px;
 }
 
 /* DETAILS GRID: Text LEFT, Image RIGHT */
@@ -1583,6 +1740,32 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
         right: 20px;
         top: 10px;
     }
+
+    .floor-plan-lightbox-content {
+        max-width: 95%;
+        max-height: 70vh;
+    }
+
+    .floor-plan-lightbox-close {
+        font-size: 2.5rem;
+        right: 20px;
+        top: 10px;
+    }
+
+    .floor-plan-lightbox-info {
+        bottom: 20px;
+        gap: 12px;
+    }
+
+    .floor-plan-lightbox-title {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+
+    .floor-plan-lightbox-toggle {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
 }
 </style>
 
@@ -1613,6 +1796,27 @@ window.currentScheme = 0;
 window.currentImage = 0;
 window.currentVariantIndex = 0;
 window.variantStates = {}; // Track layout index and reversed state per variant
+
+// Floor Plan Lightbox Data
+window['floorPlansData_<?php echo esc_js($block_id); ?>'] = <?php echo json_encode(array_map(function($variant) {
+    if (empty($variant['floor_plans']) || !is_array($variant['floor_plans'])) {
+        return [];
+    }
+    return array_map(function($plan) {
+        return array(
+            'title' => $plan['title'] ?? '',
+            'description' => $plan['description'] ?? '',
+            'normal' => $plan['normal_plan']['url'] ?? '',
+            'mirrored' => $plan['mirrored_plan']['url'] ?? ''
+        );
+    }, $variant['floor_plans']);
+}, $size_variants ?? [])); ?>;
+
+window['floorPlanLightboxState_<?php echo esc_js($block_id); ?>'] = {
+    variantIndex: 0,
+    planIndex: 0,
+    isReversed: false
+};
 
 // Color selection
 function switchExteriorColor(colorIndex) {
@@ -1854,7 +2058,106 @@ document.addEventListener('keydown', function(e) {
         else if (e.key === 'ArrowLeft') window.navigateMobilhausTerraseLightbox(-1, '<?php echo esc_js($block_id); ?>');
         else if (e.key === 'ArrowRight') window.navigateMobilhausTerraseLightbox(1, '<?php echo esc_js($block_id); ?>');
     }
+
+    // Floor Plan lightbox keyboard navigation
+    const floorPlanLightbox = document.getElementById('floor-plan-lightbox-<?php echo esc_js($block_id); ?>');
+    if (floorPlanLightbox && floorPlanLightbox.classList.contains('active')) {
+        if (e.key === 'Escape') closeFloorPlanLightbox('<?php echo esc_js($block_id); ?>');
+    }
 });
+
+// ========== FLOOR PLAN LIGHTBOX FUNCTIONS ==========
+
+// Open Floor Plan Lightbox
+function openFloorPlanLightbox(blockId, variantIndex, planIndex) {
+    const floorPlans = window['floorPlansData_' + blockId];
+    if (!floorPlans || !floorPlans[variantIndex] || !floorPlans[variantIndex][planIndex]) {
+        return;
+    }
+
+    const plan = floorPlans[variantIndex][planIndex];
+    const state = window['floorPlanLightboxState_' + blockId];
+
+    // Update state
+    state.variantIndex = variantIndex;
+    state.planIndex = planIndex;
+
+    // Get current view from the floor plan toggle state
+    const stateKey = blockId + '-' + variantIndex + '-' + planIndex;
+    state.isReversed = floorPlanStates[stateKey] || false;
+
+    // Update lightbox content
+    const lightbox = document.getElementById('floor-plan-lightbox-' + blockId);
+    const img = document.getElementById('floor-plan-lightbox-img-' + blockId);
+    const title = document.getElementById('floor-plan-lightbox-title-' + blockId);
+    const toggleBtn = document.getElementById('floor-plan-lightbox-toggle-' + blockId);
+
+    img.src = state.isReversed ? plan.mirrored : plan.normal;
+    title.textContent = plan.title || 'Grundriss';
+
+    if (toggleBtn) {
+        const toggleText = toggleBtn.querySelector('.floor-plan-toggle-text');
+        if (toggleText) {
+            toggleText.textContent = state.isReversed ? 'Normal anzeigen' : 'Gespiegelt anzeigen';
+        }
+    }
+
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close Floor Plan Lightbox
+function closeFloorPlanLightbox(blockId) {
+    const lightbox = document.getElementById('floor-plan-lightbox-' + blockId);
+    lightbox.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Toggle Floor Plan Lightbox View (Normal <-> Mirrored)
+function toggleFloorPlanLightboxView(blockId) {
+    const state = window['floorPlanLightboxState_' + blockId];
+    const floorPlans = window['floorPlansData_' + blockId];
+
+    if (!floorPlans || !floorPlans[state.variantIndex] || !floorPlans[state.variantIndex][state.planIndex]) {
+        return;
+    }
+
+    const plan = floorPlans[state.variantIndex][state.planIndex];
+    const img = document.getElementById('floor-plan-lightbox-img-' + blockId);
+    const toggleBtn = document.getElementById('floor-plan-lightbox-toggle-' + blockId);
+
+    // Toggle state
+    state.isReversed = !state.isReversed;
+
+    // Update floor plan state to sync with main view
+    const stateKey = blockId + '-' + state.variantIndex + '-' + state.planIndex;
+    floorPlanStates[stateKey] = state.isReversed;
+
+    // Fade out
+    img.style.opacity = '0.5';
+
+    setTimeout(function() {
+        // Switch image
+        img.src = state.isReversed ? plan.mirrored : plan.normal;
+
+        // Fade in
+        img.style.opacity = '1';
+
+        // Update button text
+        if (toggleBtn) {
+            const toggleText = toggleBtn.querySelector('.floor-plan-toggle-text');
+            if (toggleText) {
+                toggleText.textContent = state.isReversed ? 'Normal anzeigen' : 'Gespiegelt anzeigen';
+            }
+        }
+
+        // Also update the main floor plan view if visible
+        const mainImg = document.getElementById('floor-plan-' + blockId + '-' + state.variantIndex + '-' + state.planIndex);
+        if (mainImg) {
+            mainImg.src = state.isReversed ? plan.mirrored : plan.normal;
+        }
+    }, 300);
+}
 
 // ========== TERRACE FUNCTIONS ==========
 
