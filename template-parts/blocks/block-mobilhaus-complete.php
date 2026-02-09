@@ -1441,13 +1441,11 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 }
 
 .lightbox-prev {
-    left: 50%;
-    transform: translateX(-70px);
+    left: 20px;
 }
 
 .lightbox-next {
-    left: 50%;
-    transform: translateX(20px);
+    right: 20px;
 }
 
 .lightbox-counter {
@@ -1806,13 +1804,11 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 }
 
 .terrase-lightbox-prev {
-    left: 50%;
-    transform: translateX(-70px);
+    left: 20px;
 }
 
 .terrase-lightbox-next {
-    left: 50%;
-    transform: translateX(20px);
+    right: 20px;
 }
 
 .terrase-lightbox-counter {

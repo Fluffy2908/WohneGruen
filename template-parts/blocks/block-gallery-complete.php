@@ -603,13 +603,11 @@ $block_id = 'gallery-' . $block['id'];
 }
 
 .lightbox-prev {
-    left: 50%;
-    transform: translateX(-70px);
+    left: 20px;
 }
 
 .lightbox-next {
-    left: 50%;
-    transform: translateX(20px);
+    right: 20px;
 }
 
 .lightbox-counter {
