@@ -2268,14 +2268,17 @@ window.updateTerraceColorDisplay = function(blockId) {
     const currentColorIndex = window['currentColorIndex_' + blockId];
     const colorVariants = window['colorVariants_' + blockId];
 
+    const terraseSections = document.querySelectorAll('#terrase-content-' + blockId + ' .terrase-color-section');
 
-    if (!colorVariants || currentColorIndex === undefined) {
+    // If no color variants or invalid index, default to showing anthrazit
+    if (!colorVariants || colorVariants.length === 0 || currentColorIndex === undefined || !colorVariants[currentColorIndex]) {
+        terraseSections.forEach(section => {
+            section.style.display = section.getAttribute('data-terrase-color') === 'anthrazit' ? 'block' : 'none';
+        });
         return;
     }
 
     const currentHouseColor = colorVariants[currentColorIndex].color_name.toLowerCase();
-
-    const terraseSections = document.querySelectorAll('#terrase-content-' + blockId + ' .terrase-color-section');
 
     terraseSections.forEach(section => {
         const terraseColor = section.getAttribute('data-terrase-color');
