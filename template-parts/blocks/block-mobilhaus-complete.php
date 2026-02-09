@@ -1550,17 +1550,19 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
     .lightbox-prev,
     .lightbox-next {
-        width: 45px;
-        height: 45px;
-        font-size: 1.5rem;
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(5px);
     }
 
     .lightbox-prev {
-        left: 10px;
+        left: 15px;
     }
 
     .lightbox-next {
-        right: 10px;
+        right: 15px;
     }
 }
 
@@ -1740,8 +1742,16 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
     .terrase-lightbox-prev,
     .terrase-lightbox-next {
-        font-size: 2rem;
-        padding: 8px 16px;
+        font-size: 2.5rem;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(5px);
+        left: 15px;
+    }
+
+    .terrase-lightbox-next {
+        right: 15px;
+        left: auto;
     }
 
     .terrase-lightbox-close {
@@ -2074,6 +2084,54 @@ document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeFloorPlanLightbox('<?php echo esc_js($block_id); ?>');
     }
 });
+
+// Touch swipe support for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+let touchStartY = 0;
+let touchEndY = 0;
+
+function handleSwipe(elementId, leftCallback, rightCallback) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    element.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    element.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+
+        // Only trigger swipe if horizontal movement is greater than vertical
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Swipe threshold: 50 pixels
+            if (deltaX > 50) {
+                // Swipe right
+                if (rightCallback) rightCallback();
+            } else if (deltaX < -50) {
+                // Swipe left
+                if (leftCallback) leftCallback();
+            }
+        }
+    }, { passive: true });
+}
+
+// Add swipe support to interior schemes lightbox
+handleSwipe('lightbox-<?php echo esc_js($block_id); ?>',
+    function() { navigateLightbox(1); },  // Swipe left = next image
+    function() { navigateLightbox(-1); }  // Swipe right = previous image
+);
+
+// Add swipe support to terrace lightbox
+handleSwipe('terrase-lightbox-<?php echo esc_js($block_id); ?>',
+    function() { window.navigateMobilhausTerraseLightbox(1, '<?php echo esc_js($block_id); ?>'); },
+    function() { window.navigateMobilhausTerraseLightbox(-1, '<?php echo esc_js($block_id); ?>'); }
+);
 
 // ========== FLOOR PLAN LIGHTBOX FUNCTIONS ==========
 

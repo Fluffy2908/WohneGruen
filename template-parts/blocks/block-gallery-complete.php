@@ -291,8 +291,11 @@ $block_id = 'gallery-' . $block['id'];
     pointer-events: none;
 }
 
-.gallery-item:hover .gallery-overlay {
-    opacity: 1;
+/* Only show hover effect on devices that support hover (desktop) */
+@media (hover: hover) {
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+    }
 }
 
 .zoom-icon {
@@ -360,8 +363,11 @@ $block_id = 'gallery-' . $block['id'];
     object-fit: cover;
 }
 
-.slider-item:hover .gallery-overlay {
-    opacity: 1;
+/* Only show hover effect on devices that support hover (desktop) */
+@media (hover: hover) {
+    .slider-item:hover .gallery-overlay {
+        opacity: 1;
+    }
 }
 
 .slider-nav {
@@ -683,17 +689,19 @@ $block_id = 'gallery-' . $block['id'];
 
     .lightbox-prev,
     .lightbox-next {
-        width: 44px;
-        height: 44px;
-        font-size: 1.5rem;
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(5px);
     }
 
     .lightbox-prev {
-        left: 10px;
+        left: 15px;
     }
 
     .lightbox-next {
-        right: 10px;
+        right: 15px;
     }
 
     .lightbox-counter {
@@ -938,4 +946,40 @@ document.addEventListener('keydown', function(e) {
         else if (e.key === 'ArrowRight') navigateLightbox(1);
     }
 });
+
+// Touch swipe support for mobile
+(function() {
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    const lightbox = document.getElementById('gallery-lightbox');
+    if (!lightbox) return;
+
+    lightbox.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    lightbox.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+
+        // Only trigger swipe if horizontal movement is greater than vertical
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Swipe threshold: 50 pixels
+            if (deltaX > 50) {
+                // Swipe right = previous image
+                navigateLightbox(-1);
+            } else if (deltaX < -50) {
+                // Swipe left = next image
+                navigateLightbox(1);
+            }
+        }
+    }, { passive: true });
+})();
 </script>
