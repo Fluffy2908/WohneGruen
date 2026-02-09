@@ -36,6 +36,28 @@ if (empty($hero_image_url)) {
     </div>
 </section>
 
+<style>
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(44, 140, 79, 0.5);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content h1 {
+    color: #ffffff;
+}
+
+.hero-text {
+    color: #ffffff;
+}
+</style>
+
 <!-- Privacy Content Section -->
 <section class="legal-section section-padding">
     <div class="container">
