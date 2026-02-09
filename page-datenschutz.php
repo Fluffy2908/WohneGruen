@@ -5,12 +5,27 @@
  */
 
 get_header();
+
+// Get featured image or use fallback
+$hero_image_url = '';
+$featured_image_id = get_post_thumbnail_id();
+if ($featured_image_id) {
+    $featured_image = wp_get_attachment_image_src($featured_image_id, 'full');
+    if ($featured_image) {
+        $hero_image_url = esc_url($featured_image[0]);
+    }
+}
+
+// Fallback to default image if no featured image is set
+if (empty($hero_image_url)) {
+    $hero_image_url = get_template_directory_uri() . '/assets/images/wohnegruen-mobilhaus-exterior-3.jpg';
+}
 ?>
 
 <!-- Privacy Hero Section -->
 <section id="main-content" class="hero-section hero-small">
     <div class="hero-background">
-        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/wohnegruen-mobilhaus-exterior-3.jpg" alt="WohneGruen Datenschutz" loading="eager">
+        <img src="<?php echo esc_url($hero_image_url); ?>" alt="WohneGruen Datenschutz" loading="eager">
         <div class="hero-overlay"></div>
     </div>
     <div class="container">

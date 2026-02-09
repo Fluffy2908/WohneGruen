@@ -62,7 +62,7 @@ $block_id = 'contact-complete-' . $block['id'];
                     </div>
                     <?php endif; ?>
 
-                    <form class="contact-form" id="contact-form" method="post" action="">
+                    <form class="contact-form" id="contact-form" method="post" action="" novalidate>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="vorname">Vorname *</label>
