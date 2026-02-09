@@ -579,21 +579,21 @@ $block_id = 'gallery-' . $block['id'];
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.3);
     border: none;
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 2rem;
-    color: white;
+    font-size: 1.5rem;
+    color: var(--color-primary);
     z-index: 10001;
     transition: all 0.3s ease;
 }
 
 .lightbox-prev:hover,
 .lightbox-next:hover {
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.5);
     transform: translateY(-50%) scale(1.1);
 }
 
@@ -689,11 +689,12 @@ $block_id = 'gallery-' . $block['id'];
 
     .lightbox-prev,
     .lightbox-next {
-        width: 60px;
-        height: 60px;
-        font-size: 2rem;
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
         background: rgba(255, 255, 255, 0.4);
         backdrop-filter: blur(5px);
+        color: var(--color-primary);
     }
 
     .lightbox-prev {

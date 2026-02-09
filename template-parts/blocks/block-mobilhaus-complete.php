@@ -1346,14 +1346,14 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.3);
     border: none;
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 2rem;
-    color: white;
+    font-size: 1.5rem;
+    color: var(--color-primary);
     z-index: 10001;
 }
 
@@ -1550,11 +1550,12 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
     .lightbox-prev,
     .lightbox-next {
-        width: 60px;
-        height: 60px;
-        font-size: 2rem;
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
         background: rgba(255, 255, 255, 0.4);
         backdrop-filter: blur(5px);
+        color: var(--color-primary);
     }
 
     .lightbox-prev {
@@ -1675,9 +1676,7 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     object-fit: contain;
 }
 
-.terrase-lightbox-close,
-.terrase-lightbox-prev,
-.terrase-lightbox-next {
+.terrase-lightbox-close {
     position: absolute;
     background: rgba(255, 255, 255, 0.2);
     color: white;
@@ -1688,10 +1687,31 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     transition: background 0.3s ease;
 }
 
-.terrase-lightbox-close:hover,
+.terrase-lightbox-prev,
+.terrase-lightbox-next {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.3);
+    color: var(--color-primary);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.terrase-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
 .terrase-lightbox-prev:hover,
 .terrase-lightbox-next:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateY(-50%) scale(1.1);
 }
 
 .terrase-lightbox-close {
@@ -1742,16 +1762,20 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
 
     .terrase-lightbox-prev,
     .terrase-lightbox-next {
-        font-size: 2.5rem;
-        padding: 12px 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
         background: rgba(255, 255, 255, 0.4);
         backdrop-filter: blur(5px);
+        color: var(--color-primary);
+    }
+
+    .terrase-lightbox-prev {
         left: 15px;
     }
 
     .terrase-lightbox-next {
         right: 15px;
-        left: auto;
     }
 
     .terrase-lightbox-close {
