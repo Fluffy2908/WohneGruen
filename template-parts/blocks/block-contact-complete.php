@@ -550,8 +550,17 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
+        console.log('Form submit triggered');
+
+        // Clear all previous errors
+        form.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+        form.querySelectorAll('.field-error').forEach(el => el.remove());
+
         // Validate form before submitting
-        if (!validateForm()) {
+        const isFormValid = validateForm();
+        console.log('Form valid:', isFormValid);
+
+        if (!isFormValid) {
             // Scroll to first error
             const firstError = form.querySelector('.error');
             if (firstError) {
