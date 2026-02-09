@@ -14,7 +14,21 @@ if (empty($title)) {
     return;
 }
 
-$bg_url = !empty($background_image) ? esc_url($background_image['url']) : '';
+// Use ACF background image if set, otherwise fall back to featured image
+$bg_url = '';
+if (!empty($background_image)) {
+    $bg_url = esc_url($background_image['url']);
+} else {
+    // Try to get featured image from current post/page
+    $featured_image_id = get_post_thumbnail_id();
+    if ($featured_image_id) {
+        $featured_image = wp_get_attachment_image_src($featured_image_id, 'full');
+        if ($featured_image) {
+            $bg_url = esc_url($featured_image[0]);
+        }
+    }
+}
+
 $block_id = isset($block['anchor']) ? $block['anchor'] : 'page-hero-' . uniqid();
 ?>
 

@@ -490,28 +490,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function validateField(field) {
         const value = field.value.trim();
+        let isValid = true;
 
         // Check if required field is empty
-        if (field.hasAttribute('required') && !value) {
-            showFieldError(field, 'Dieses Feld ist erforderlich');
-            return false;
+        if (field.hasAttribute('required')) {
+            if (!value) {
+                showFieldError(field, 'Dieses Feld ist erforderlich');
+                return false;
+            }
         }
 
-        // Email validation
-        if (field.type === 'email' && value) {
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(value)) {
+        // Email validation (only if field has value OR is required email field)
+        if (field.type === 'email') {
+            if (value) {
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(value)) {
+                    showFieldError(field, 'Bitte geben Sie eine gültige E-Mail-Adresse ein');
+                    return false;
+                }
+            } else if (field.hasAttribute('required')) {
                 showFieldError(field, 'Bitte geben Sie eine gültige E-Mail-Adresse ein');
                 return false;
             }
         }
 
-        // Textarea minimum length
-        if (field.tagName === 'TEXTAREA' && value && value.length < 10) {
-            showFieldError(field, 'Bitte geben Sie mindestens 10 Zeichen ein');
-            return false;
+        // Textarea minimum length (only check if required and has some text)
+        if (field.tagName === 'TEXTAREA' && field.hasAttribute('required')) {
+            if (value && value.length < 10) {
+                showFieldError(field, 'Bitte geben Sie mindestens 10 Zeichen ein');
+                return false;
+            }
         }
 
+        // If we got here, field is valid
         clearFieldError(field);
         if (value) {
             field.classList.add('success');
