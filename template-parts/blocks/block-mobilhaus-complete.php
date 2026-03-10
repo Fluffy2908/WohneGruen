@@ -258,6 +258,44 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
     </section>
     <?php endif; ?>
 
+    <!-- 3D RUNDGANG SECTION -->
+    <?php
+    $has_rundgang = false;
+    if ($size_variants && is_array($size_variants)) {
+        foreach ($size_variants as $variant) {
+            if (!empty($variant['video_rundgang'])) {
+                $has_rundgang = true;
+                break;
+            }
+        }
+    }
+    ?>
+    <?php if ($has_rundgang): ?>
+    <section class="rundgang-section section-padding">
+        <div class="container">
+            <h2 class="section-title">3D Rundgang</h2>
+            <p class="section-subtitle">Erleben Sie Ihr Mobilhaus von innen – ein virtueller Rundgang durch alle Räume</p>
+
+            <?php foreach ($size_variants as $var_index => $variant): ?>
+                <?php if (!empty($variant['video_rundgang'])): ?>
+                <div class="rundgang-video-wrapper"
+                     data-variant-index="<?php echo $var_index; ?>"
+                     style="<?php echo $var_index === 0 ? '' : 'display: none;'; ?>">
+                    <video
+                        class="rundgang-video"
+                        controls
+                        preload="metadata"
+                        playsinline>
+                        <source src="<?php echo esc_url($variant['video_rundgang']['url']); ?>" type="video/mp4">
+                        Ihr Browser unterstützt keine Video-Wiedergabe.
+                    </video>
+                </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    </section>
+    <?php endif; ?>
+
     <!-- TERRACE OPTIONS SECTION -->
     <?php if ($terrase_section && isset($terrase_section['enable_terrase']) && $terrase_section['enable_terrase']):
         $terrase_title = !empty($terrase_section['terrase_title']) ? $terrase_section['terrase_title'] : 'Terrassen Optionen';
@@ -510,6 +548,7 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
         <div class="lightbox-counter" id="lightbox-counter"></div>
     </div>
     <?php endif; ?>
+
 
 </article>
 
@@ -1937,6 +1976,32 @@ if ($color_variants && isset($color_variants[0]['exterior_image']['url'])) {
         font-size: 0.9rem;
     }
 }
+
+/* 3D RUNDGANG SECTION */
+.rundgang-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.rundgang-video-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+}
+
+.rundgang-video {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: #000;
+}
+
+@media (max-width: 768px) {
+    .rundgang-video-wrapper {
+        border-radius: 12px;
+    }
+}
 </style>
 
 <script>
@@ -2097,6 +2162,18 @@ function switchSizeVariant(variantIndex, blockId) {
     const contents = document.querySelectorAll('.size-variant-content');
     contents.forEach((content, idx) => {
         content.style.display = idx === variantIndex ? 'block' : 'none';
+    });
+
+    // Update 3D Rundgang video
+    const videoWrappers = document.querySelectorAll('.rundgang-video-wrapper');
+    videoWrappers.forEach((wrapper) => {
+        const video = wrapper.querySelector('video');
+        if (parseInt(wrapper.dataset.variantIndex) === variantIndex) {
+            wrapper.style.display = 'block';
+        } else {
+            if (video) video.pause();
+            wrapper.style.display = 'none';
+        }
     });
 }
 
