@@ -28,7 +28,7 @@
             "key": "field_agb_email",
             "label": "E-Mail",
             "name": "agb_email",
-            "type": "email",
+            "type": "text",
             "required": 1
         },
         {

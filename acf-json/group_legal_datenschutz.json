@@ -28,7 +28,7 @@
             "key": "field_datenschutz_controller_email",
             "label": "Verantwortlicher (E-Mail)",
             "name": "datenschutz_controller_email",
-            "type": "email",
+            "type": "text",
             "required": 1
         },
         {
@@ -42,7 +42,7 @@
             "key": "field_datenschutz_dpo_email",
             "label": "Datenschutzbeauftragter E-Mail",
             "name": "datenschutz_dpo_email",
-            "type": "email",
+            "type": "text",
             "required": 0
         },
         {
